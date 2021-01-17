@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+    <body>
+        <h3>{{ video.name }}</h3>
+        By:
+        <b>{{ video.channel.displayName }}</b> ({{ video.channel.name }}@{{ video.channel.host }})
+        <br>
+        {% if video.no_quality_selected %}
+            <img height="300" src="https://{{ video.channel.host }}{{ video.thumbnailPath }}">
+            <p style="color: red">Please select a resolution:</p>
+        {% else %}
+            <video height="300" controls>
+                <source src="{{ video.video }}">
+            </video>
+            <br>
+            <b>Resolutions:</b>
+        {% endif %}
+
+        {% for resolution in video.resolutions %}
+        <a href="?quality={{ resolution.id }}">{{ resolution.label }}</a>
+        {% endfor %}
+        
+        <br>
+        Views: <b>{{ video.views }}</b> Likes: <b>{{ video.likes }}</b> Dislikes: <b>{{ video.dislikes }}</b>
+
+        <br>
+        <br>
+        {{ video.description }}
+        <br>
+        <br>
+
+        <table>
+            <tr>
+                <td><b>Category</b></td>
+                <td>{{ video.category.label }}</td>
+            </tr>
+            <tr>
+                <td><b>License</b></td>
+                <td>{{ video.licence.label }}</td>
+            </tr>
+            <tr>
+                <td><b>Language</b></td>
+                <td>{{ video.language.label }}</td>
+            </tr>
+            <tr>
+                <td><b>Privacy</b></td>
+                <td>{{ video.privacy.label }}</td>
+            </tr>
+        </table>
+    </body>
+</html>
