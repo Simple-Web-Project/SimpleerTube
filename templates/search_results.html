@@ -1,24 +1,26 @@
-<!doctype html>
-<html>
-    <body>
-        <p>{{ amount }} results</p>
-        <table>
-        {% for result in results %}
-        <tr>
-            <td>
-                <a href="/{{ domain}}/watch/{{ result.uuid }}">
-                    <img src="https://{{ domain }}/{{ result.thumbnailPath }}" height="150"/>
-                </a>
-            </td>
-            <td>
-                <a href="/{{ domain }}/watch/{{ result.uuid }}">{{ result.name }}</a>
-                <br>
-                {{ result.views }} Views
-                <br>
-                <b>{{ result.channel.displayName }}</b>
-            </td>
-        </tr>
-        {% endfor %}
-        </table>
-    </body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}{{ search_term }} - {{ domain }}{% endblock %}
+
+{% block content %}
+<p>{{ amount }} results</p>
+
+<table>
+{% for result in results %}
+<tr>
+    <td>
+	<a href="/{{ domain }}/watch/{{ result.uuid }}">
+	    <img src="https://{{ domain }}/{{ result.thumbnailPath }}" height="150"/>
+	</a>
+    </td>
+    <td>
+	<a href="/{{ domain }}/watch/{{ result.uuid }}">{{ result.name }}</a>
+	<br>
+	{{ result.views }} Views
+	<br>
+	<b>{{ result.channel.displayName }}</b>
+    </td>
+</tr>
+{% endfor %}
+</table>
+{% endblock %}
