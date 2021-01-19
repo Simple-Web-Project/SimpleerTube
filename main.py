@@ -19,10 +19,17 @@ class VideoWrapper:
         self.likes = a["likes"]
         self.dislikes = a["dislikes"]
 
+        self.embedPath = a["embedPath"]
+
         self.resolutions = []
         self.video = None
 
-        for entry in a["files"]:
+        self.files = a["files"]
+        if len(self.files) == 0:
+            self.files = ((a["streamingPlaylists"])[0])["files"]
+
+
+        for entry in self.files:
             resolution = (entry["resolution"])["id"]
             self.resolutions.append(entry["resolution"])
 
@@ -67,11 +74,12 @@ async def search(domain, term):
 async def video(domain, id):
     data = peertube.video(domain, id)
     quality = request.args.get("quality")
+    embed = request.args.get("embed")
     if quality == None:
         quality = "best"
     vid = VideoWrapper(data, quality)
 
-    return await render_template("video.html", video=vid, quality=quality)
+    return await render_template("video.html", video=vid, quality=quality, embed=embed)
 
 
 if __name__ == "__main__":

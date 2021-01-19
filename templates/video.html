@@ -5,9 +5,12 @@
         By:
         <b>{{ video.channel.displayName }}</b> ({{ video.channel.name }}@{{ video.channel.host }})
         <br>
-        {% if video.no_quality_selected %}
+        {% if video.no_quality_selected and not embed %}
             <img height="300" src="https://{{ video.channel.host }}{{ video.thumbnailPath }}">
             <p style="color: red">Please select a resolution:</p>
+        {% elif embed %}
+            <embed height="300" src="https://{{ video.channel.host }}{{ video.embedPath }}">
+            <br>
         {% else %}
             <video height="300" controls>
                 <source src="{{ video.video }}">
@@ -17,8 +20,9 @@
         {% endif %}
 
         {% for resolution in video.resolutions %}
-        <a href="?quality={{ resolution.id }}">{{ resolution.label }}</a>
+            <a href="?quality={{ resolution.id }}">{{ resolution.label }}</a>
         {% endfor %}
+        <a href="?embed=1">Embedded</a>
         
         <br>
         Views: <b>{{ video.views }}</b> Likes: <b>{{ video.likes }}</b> Dislikes: <b>{{ video.dislikes }}</b>
@@ -45,6 +49,14 @@
             <tr>
                 <td><b>Privacy</b></td>
                 <td>{{ video.privacy.label }}</td>
+            </tr>
+            <tr>
+                <td><b>Tags</b></td>
+                <td>
+                    {% for tag in video.tags %}
+                        {{ tag }}
+                    {% endfor %}
+                </td>
             </tr>
         </table>
     </body>
