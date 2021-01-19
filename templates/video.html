@@ -11,6 +11,7 @@
         {% elif embed %}
             <embed height="300" src="https://{{ video.channel.host }}{{ video.embedPath }}">
             <br>
+            <b>Resolutions:</b>
         {% else %}
             <video height="300" controls>
                 <source src="{{ video.video }}">
