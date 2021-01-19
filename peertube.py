@@ -2,6 +2,10 @@ from bs4 import BeautifulSoup
 import requests
 import json
 
+def get_instance_name(domain):
+    soup = BeautifulSoup(requests.get("https://" + domain).text)
+    return soup.find('span', class_="instance-name").text
+
 def video(domain, id):
     video_url = "https://" + domain + "/api/v1/videos/" + id
     video_object = json.loads(requests.get(video_url).text)
