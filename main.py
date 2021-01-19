@@ -79,7 +79,7 @@ async def video(domain, id):
         quality = "best"
     vid = VideoWrapper(data, quality)
 
-    return await render_template("video.html", video=vid, quality=quality, embed=embed)
+    return await render_template("video.html", domain=domain, video=vid, quality=quality, embed=embed)
 
 
 if __name__ == "__main__":
