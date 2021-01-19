@@ -1,0 +1,21 @@
+<!doctype html>
+
+<html>
+    <head>
+        {% block head %}
+	<title>{% block full_title %}{% block title %}{% endblock %} - SimpleerTube{% endblock %}</title>
+	{% endblock %}
+    </head>
+
+    <body>
+        <form action="/{{ domain }}/search" method="POST">
+	    <input type="text" name="query" id="query" value="{{ search_term }}"/>
+            <button type="submit">Search</button>
+        </form>
+
+	<br>
+	<br>
+
+	{% block content %}{% endblock %}
+    </body>
+</html>

@@ -66,7 +66,7 @@ async def search_redirect(domain):
 async def search(domain, term):
     amount, results = peertube.search(domain, term)
     return await render_template(
-        "search_results.html", domain=domain, amount=amount, results=results
+        "search_results.html", domain=domain, amount=amount, results=results, search_term=term
     )
 
 
