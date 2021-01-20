@@ -1,6 +1,14 @@
 from quart import Quart, request, render_template, redirect
 import peertube
 
+
+commit = "not found"
+with open(".git/refs/heads/main") as file:
+    for line in file:
+        commit = line
+        # we only expect one line
+        break
+
 # Wrapper, only containing information that's important for us, and in some cases provides simplified ways to get information
 class VideoWrapper:
     def __init__(self, a, quality):
@@ -28,7 +36,6 @@ class VideoWrapper:
         if len(self.files) == 0:
             self.files = ((a["streamingPlaylists"])[0])["files"]
 
-
         for entry in self.files:
             resolution = (entry["resolution"])["id"]
             self.resolutions.append(entry["resolution"])
@@ -53,9 +60,11 @@ async def domain_main(domain):
         "domain_index.html",
         domain=domain,
         instance_name=peertube.get_instance_name(domain),
+        commit=commit,
     )
 
-@app.route('/<string:domain>/search', methods=["POST"])
+
+@app.route("/<string:domain>/search", methods=["POST"])
 async def search_redirect(domain):
     query = (await request.form)["query"]
     return redirect("/" + domain + "/search/" + query)
@@ -65,7 +74,12 @@ async def search_redirect(domain):
 async def search(domain, term):
     amount, results = peertube.search(domain, term)
     return await render_template(
-        "search_results.html", domain=domain, amount=amount, results=results, search_term=term
+        "search_results.html",
+        domain=domain,
+        amount=amount,
+        results=results,
+        search_term=term,
+        commit=commit,
     )
 
 
@@ -78,7 +92,14 @@ async def video(domain, id):
         quality = "best"
     vid = VideoWrapper(data, quality)
 
-    return await render_template("video.html", domain=domain, video=vid, quality=quality, embed=embed)
+    return await render_template(
+        "video.html",
+        domain=domain,
+        video=vid,
+        quality=quality,
+        embed=embed,
+        commit=commit,
+    )
 
 
 if __name__ == "__main__":
