@@ -96,6 +96,7 @@ async def video(domain, id):
         "video.html",
         domain=domain,
         video=vid,
+        comments=peertube.get_comments(domain, id),
         quality=quality,
         embed=embed,
         commit=commit,
