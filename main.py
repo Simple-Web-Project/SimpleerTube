@@ -52,8 +52,7 @@ async def domain_main(domain):
     return await render_template(
         "domain_index.html",
         domain=domain,
-        instance_name="placeholder",
-        #instance_name=peertube.get_instance_name(domain),
+        instance_name=peertube.get_instance_name(domain),
     )
 
 @app.route('/<string:domain>/search', methods=["POST"])

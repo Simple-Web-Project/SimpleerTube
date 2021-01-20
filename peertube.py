@@ -3,8 +3,12 @@ import requests
 import json
 
 def get_instance_name(domain):
-    soup = BeautifulSoup(requests.get("https://" + domain).text)
-    return soup.find('span', class_="instance-name").text
+    soup = BeautifulSoup(requests.get("https://" + domain).text, "lxml")
+    title = soup.find('title')
+    if title:
+        return title.text
+    else:
+        return "PeerTube Instance"
 
 def video(domain, id):
     video_url = "https://" + domain + "/api/v1/videos/" + id
@@ -20,9 +24,18 @@ def search(domain, term, start = 0, count = 10):
 
     return amount, results
 
+def comments(domain, id):
+    url = "https://" + domain + "/api/v1/videos/" + id + "/comment-threads"
+    comments_object = json.loads(requests.get(url).text)
+    return comments_object
+
 
 if __name__ == "__main__":
-    vid = video("diode.zone", "5405dac8-05c1-4512-b842-67be43ce7442")
-    print(json.dumps(vid, indent=2))
+    name = get_instance_name("videos.lukesmith.xyz")
+    print(name)
+    #com = comments("videos.lukesmith.xyz", "591bf5dd-b02f-40f7-a2cc-b4929c52cb51")
+    #print(json.dumps(com, indent=2))
+    #vid = video("diode.zone", "c4f0d71b-bd8b-4641-87b0-6d9edd4fa9ce")
+    #print(json.dumps(vid, indent=2))
     #_, results = search("diode.zone", "test")
     #print(json.dumps(results, indent=2))
