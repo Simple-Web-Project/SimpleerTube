@@ -2,6 +2,7 @@ from quart import Quart, request, render_template, redirect
 import peertube
 
 
+
 commit = "not found"
 with open(".git/refs/heads/main") as file:
     for line in file:
@@ -47,8 +48,17 @@ class VideoWrapper:
         self.no_quality_selected = not self.video
 
 
-app = Quart(__name__)
+cached_instance_names = {}
 
+# cache the instance names so we don't have to send a request to the domain every time someone
+# loads any site 
+def get_instance_name(domain):
+    if domain in cached_instance_names:
+        return cached_instance_names[domain]
+    return peertube.get_instance_name(domain)
+
+
+app = Quart(__name__)
 
 @app.route("/")
 async def main():
@@ -60,7 +70,7 @@ async def domain_main(domain):
     return await render_template(
         "domain_index.html",
         domain=domain,
-        instance_name=peertube.get_instance_name(domain),
+        instance_name=get_instance_name(domain),
         commit=commit,
     )
 
@@ -77,10 +87,12 @@ async def search(domain, term):
     return await render_template(
         "search_results.html",
         domain=domain,
+        instance_name=get_instance_name(domain),
+        commit=commit,
+
         amount=amount,
         results=results,
         search_term=term,
-        commit=commit,
     )
 
 
@@ -101,11 +113,13 @@ async def video(domain, id):
     return await render_template(
         "video.html",
         domain=domain,
+        commit=commit,
+        instance_name=get_instance_name(domain),
+
         video=vid,
         comments=comments,
         quality=quality,
         embed=embed,
-        commit=commit,
     )
 
 

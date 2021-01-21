@@ -9,7 +9,8 @@
 
     <body>
         <form action="/{{ domain }}/search" method="POST">
-	    <input type="text" name="query" id="query" value="{{ search_term }}"/>
+            <label for="query"><b>{{ instance_name }}</b></label>
+	        <input type="text" name="query" id="query" placeholder="Search" value="{{ search_term }}"/>
             <button type="submit">Search</button>
         </form>
 
