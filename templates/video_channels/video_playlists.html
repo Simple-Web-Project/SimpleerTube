@@ -1,0 +1,27 @@
+{% extends "video_channels/base.html" %}
+
+{% block title %}{{ domain }}{% endblock %}
+
+{% block sub_content %}
+
+{{ video_playlists.total }} Playlists
+<br>
+<br>
+
+<table>
+{% for playlist in video_playlists.data %}
+    <tr>
+        <td>
+            <img src="https://{{ domain }}{{ playlist.thumbnailPath }}" height="150"/>
+        </td>
+        <td>
+            <b>{{ playlist.displayName }}</b>
+            <br>
+            {{ playlist.videosLength }} Videos
+        </td>
+    </tr>
+
+{% endfor %}
+</table>
+
+{% endblock %}

@@ -5,7 +5,13 @@
 {% block content %}
 <h3>{{ video.name }}</h3>
 By:
-<b>{{ video.channel.displayName }}</b> ({{ video.channel.name }}@{{ video.channel.host }})
+<a href="/{{ domain }}/video-channels/{{ video.channel.name }}@{{ video.channel.host }}/videos">
+    <b>{{ video.channel.displayName }}</b>
+</a>
+<a href="/{{ domain }}/accounts/{{ video.channel.ownerAccount.name }}@{{ video.channel.ownerAccount.host }}/video-channels">
+    ({{ video.channel.ownerAccount.name }}@{{ video.channel.ownerAccount.host }})
+</a>
+
 <br>
 {% if video.no_quality_selected and not embed %}
     <img height="300" src="https://{{ video.channel.host }}{{ video.thumbnailPath }}">

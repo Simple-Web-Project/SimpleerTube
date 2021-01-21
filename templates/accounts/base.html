@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}{{ domain }}{% endblock %}
+
+{% block content %}
+<table>
+    <tr>
+        <td>
+            <img src="https://{{ account.host }}{{ account.avatar.path }}" height="100"/>
+        </td>
+        <td>
+            <b>{{ account.displayName }}</b> {{ account.name }}
+            <br>
+            {{ account.followersCount }} Followers 
+        </td>
+    <tr>
+</table>
+
+<br>
+<br>
+<a href="/{{ domain }}/accounts/{{ name }}/video-channels">Video Channels</a>
+<b> | </b>
+<a href="/{{ domain }}/accounts/{{ name }}/videos">Videos</a>
+<b> | </b>
+<a href="/{{ domain }}/accounts/{{ name }}/about">About</a>
+<br>
+<br>
+
+{% block sub_content %}{% endblock %}
+
+{% endblock %}

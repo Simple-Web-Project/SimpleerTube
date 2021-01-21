@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}{{ domain }}{% endblock %}
+
+{% block content %}
+<table>
+    <tr>
+        <td>
+            <img src="https://{{ video_channel.host }}{{ video_channel.avatar.path }}" height="100"/>
+        </td>
+        <td>
+            <b>{{ video_channel.displayName }}</b> {{ video_channel.name }}
+            <br>
+            {{ video_channel.followersCount }} Followers
+            <br>
+            Created By 
+            <a href="/{{ domain }}/accounts/{{ video_channel.ownerAccount.name }}@{{ video_channel.ownerAccount.host }}"> {{ video_channel.ownerAccount.name }}</a>
+            
+        </td>
+    <tr>
+</table>
+
+<br>
+<br>
+<a href="/{{ domain }}/video-channels/{{ name }}/videos">Videos</a>
+<b> | </b>
+<a href="/{{ domain }}/video-channels/{{ name }}/video-playlists">Video Playlists</a>
+<b> | </b>
+<a href="/{{ domain }}/video-channels/{{ name }}/about">About</a>
+<br>
+<br>
+
+{% block sub_content %}{% endblock %}
+
+{% endblock %}

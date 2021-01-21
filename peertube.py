@@ -26,16 +26,48 @@ def search(domain, term, start = 0, count = 10):
 
 def get_comments(domain, id):
     url = "https://" + domain + "/api/v1/videos/" + id + "/comment-threads"
-    comments_object = json.loads(requests.get(url).text)
-    return comments_object
+    return json.loads(requests.get(url).text)
 
+# --- Accounts ---
+
+def account_video_channels(domain, name):
+    url = "https://" + domain + "/api/v1/accounts/" + name + "/video-channels"
+    return json.loads(requests.get(url).text)
+
+def account_videos(domain, name):
+    url = "https://" + domain + "/api/v1/accounts/" + name + "/videos"
+    return json.loads(requests.get(url).text)
+
+def account(domain, name):
+    url = "https://" + domain + "/api/v1/accounts/" + name
+    return json.loads(requests.get(url).text)
+
+# --- Video Channels ---
+
+def video_channel_videos(domain, name):
+    url = "https://" + domain + "/api/v1/video-channels/" + name + "/videos"
+    return json.loads(requests.get(url).text)
+
+def video_channel_video_playlists(domain, name):
+    url = "https://" + domain + "/api/v1/video-channels/" + name + "/video-playlists"
+    return json.loads(requests.get(url).text)
+
+def video_channel(domain, name):
+    url = "https://" + domain + "/api/v1/video-channels/" + name
+    return json.loads(requests.get(url).text)
 
 if __name__ == "__main__":
     #name = get_instance_name("videos.lukesmith.xyz")
     #print(name)
-    com = get_comments("videos.lukesmith.xyz", "d1bfb082-b203-43dc-9676-63d28fe65db5")
-    print(json.dumps(com, indent=2))
+
+    #com = get_comments("videos.lukesmith.xyz", "d1bfb082-b203-43dc-9676-63d28fe65db5")
+    #print(json.dumps(com, indent=2))
+
     #vid = video("diode.zone", "c4f0d71b-bd8b-4641-87b0-6d9edd4fa9ce")
     #print(json.dumps(vid, indent=2))
-    #_, results = search("diode.zone", "test")
-    #print(json.dumps(results, indent=2))
+
+    _, results = search("diode.zone", "test")
+    print(json.dumps(results, indent=2))
+
+    #video_channels = account_video_channels("peer.tube", "mouse@peertube.dsmouse.net")
+    #print(json.dumps(video_channels, indent=2))

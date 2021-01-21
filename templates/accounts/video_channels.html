@@ -1,0 +1,28 @@
+{% extends "accounts/base.html" %}
+
+{% block title %}{{ domain }}{% endblock %}
+
+{% block sub_content %}
+
+{{ video_channels.total }} Channels
+<br>
+<br>
+
+<table>
+{% for channel in video_channels.data %}
+    <tr>
+        <td>
+            <img src="https://{{ domain }}{{ channel.avatar.path }}" height="75"/>
+        </td>
+        <td>
+            <a href="/{{ domain }}/video-channels/{{ channel.name }}@{{ channel.host }}">
+                <b>{{ channel.displayName }}</b>
+            </a>
+            <br>
+            {{ channel.followersCount }} Followers
+        </td>
+    </tr>
+{% endfor %}
+</table>
+
+{% endblock %}

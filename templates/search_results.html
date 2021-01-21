@@ -14,11 +14,17 @@
 	</a>
     </td>
     <td>
-	<a href="/{{ domain }}/watch/{{ result.uuid }}">{{ result.name }}</a>
+	<a href="/{{ domain }}/videos/watch/{{ result.uuid }}">{{ result.name }}</a>
 	<br>
 	{{ result.views }} Views
 	<br>
-	<b>{{ result.channel.displayName }}</b>
+    <a href="/{{ domain }}/accounts/{{ result.channel.name }}@{{ result.channel.host }}">
+        <b>{{ result.channel.displayName }}</b>
+    </a>
+    <br>
+    <a href="/{{ domain }}/accounts/{{ result.account.name }}@{{ result.account.host }}">
+        {{ result.account.name }}@{{ result.account.host }}
+    </a>
     </td>
 </tr>
 {% endfor %}

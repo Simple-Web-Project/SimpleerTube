@@ -47,33 +47,56 @@ class VideoWrapper:
         self.no_quality_selected = not self.video
 
 
-# Format:
-# key: domain
-# entry: [ instance_name, last_time_updated ]
-cached_instance_names = {}
+# Helper Class for using caches
+class Cache:
+    def __init__(self):
+        self.dict = {}
+
+    def get(self, arg, func):
+        if arg in self.dict:
+            last_time_updated = (self.dict[arg])[1]
+            time_diff = datetime.now() - last_time_updated
+
+            if time_diff.days > 0:
+                self.dict[arg] = [
+                    func(arg),
+                    datetime.now()
+                ]
+        else:
+            self.dict[arg] = [
+                func(arg),
+                datetime.now()
+            ]
+
+        return (self.dict[arg])[0]
+
+
+cached_instance_names = Cache()
+cached_account_infos = Cache()
+cached_video_channel_infos = Cache()
 
 # cache the instance names so we don't have to send a request to the domain every time someone
 # loads any site 
 def get_instance_name(domain):
-    if domain in cached_instance_names:
-        last_time_updated = (cached_instance_names[domain])[1]
-        time_diff = datetime.now() - last_time_updated
-
-        # only check once every day
-        if time_diff.days != 0:
-            cached_instance_names[domain] = [
-                peertube.get_instance_name(domain),
-                datetime.now()
-            ]
-    else:
-        cached_instance_names[domain] = [
-            peertube.get_instance_name(domain),
-            datetime.now()
-        ]
-
-    return (cached_instance_names[domain])[0]
+    return cached_instance_names.get(domain, peertube.get_instance_name)
 
 
+# simple wrapper that is used inside the cached_account_infos
+def get_account(info):
+    info = info.split("@")
+    return peertube.account(info[1], info[0])
+
+def get_account_info(name):
+    return cached_account_infos.get(name, get_account)
+
+
+# simple wrapper that is used inside the cached_video_channel_infos
+def get_video_channel(info):
+    info = info.split("@")
+    return peertube.video_channel(info[1], info[0])
+
+def get_video_channel_info(name):
+    return cached_video_channel_infos.get(name, get_video_channel)
 
 
 
@@ -140,6 +163,102 @@ async def video(domain, id):
         comments=comments,
         quality=quality,
         embed=embed,
+    )
+
+
+def build_channel_or_account_name(domain, name):
+    if '@' in name:
+        return name
+    return name + "@" + domain
+
+# --- Accounts ---
+
+@app.route("/<string:domain>/accounts/<string:name>")
+async def accounts(domain, name):
+    return redirect("/" + domain + "/accounts/" + name + "/video-channels")
+
+@app.route("/<string:domain>/accounts/<string:name>/video-channels")
+async def account__video_channels(domain, name):
+    return await render_template(
+        "accounts/video_channels.html",
+        domain=domain,
+        commit=commit,
+        instance_name=get_instance_name(domain),
+
+        name = name,
+        account = get_account_info(build_channel_or_account_name(domain, name)),
+        video_channels = peertube.account_video_channels(domain, name)
+    )
+
+@app.route("/<string:domain>/accounts/<string:name>/videos")
+async def account__videos(domain, name):
+    return await render_template(
+        "accounts/videos.html",
+        domain=domain,
+        commit=commit,
+        instance_name=get_instance_name(domain),
+
+        name = name,
+        account = get_account_info(build_channel_or_account_name(domain, name)),
+        videos = peertube.account_videos(domain, name)
+    )
+
+@app.route("/<string:domain>/accounts/<string:name>/about")
+async def account__about(domain, name):
+    return await render_template(
+        "accounts/about.html",
+        domain=domain,
+        commit=commit,
+        instance_name=get_instance_name(domain),
+
+        name = name,
+        account = get_account_info(build_channel_or_account_name(domain, name)),
+        about = peertube.account(domain, name)
+    )
+
+# --- Video-Channels ---
+
+@app.route("/<string:domain>/video-channels/<string:name>")
+async def video_channels(domain, name):
+    return redirect("/" + domain + "/video-channels/" + name + "/videos")
+
+@app.route("/<string:domain>/video-channels/<string:name>/videos")
+async def video_channels__videos(domain, name):
+    return await render_template(
+        "video_channels/videos.html",
+        domain=domain,
+        commit=commit,
+        instance_name=get_instance_name(domain),
+
+        name = name,
+        video_channel = get_video_channel_info(build_channel_or_account_name(domain, name)),
+        videos = peertube.video_channel_videos(domain, name)
+    )
+
+@app.route("/<string:domain>/video-channels/<string:name>/video-playlists")
+async def video_channels__video_playlists(domain, name):
+    return await render_template(
+        "video_channels/video_playlists.html",
+        domain=domain,
+        commit=commit,
+        instance_name=get_instance_name(domain),
+
+        name = name,
+        video_channel = get_video_channel_info(build_channel_or_account_name(domain, name)),
+        video_playlists = peertube.video_channel_video_playlists(domain, name)
+    )
+
+@app.route("/<string:domain>/video-channels/<string:name>/about")
+async def video_channels__about(domain, name):
+    return await render_template(
+        "video_channels/about.html",
+        domain=domain,
+        commit=commit,
+        instance_name=get_instance_name(domain),
+
+        name = name,
+        video_channel = get_video_channel_info(build_channel_or_account_name(domain, name)),
+        about = peertube.video_channel(domain, name)
     )
 
 if __name__ == "__main__":
