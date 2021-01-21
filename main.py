@@ -1,7 +1,6 @@
 from quart import Quart, request, render_template, redirect
+from datetime import datetime
 import peertube
-
-
 
 commit = "not found"
 with open(".git/refs/heads/main") as file:
@@ -48,14 +47,35 @@ class VideoWrapper:
         self.no_quality_selected = not self.video
 
 
+# Format:
+# key: domain
+# entry: [ instance_name, last_time_updated ]
 cached_instance_names = {}
 
 # cache the instance names so we don't have to send a request to the domain every time someone
 # loads any site 
 def get_instance_name(domain):
     if domain in cached_instance_names:
-        return cached_instance_names[domain]
-    return peertube.get_instance_name(domain)
+        last_time_updated = (cached_instance_names[domain])[1]
+        time_diff = datetime.now() - last_time_updated
+
+        # only check once every day
+        if time_diff.days != 0:
+            cached_instance_names[domain] = [
+                peertube.get_instance_name(domain),
+                datetime.now()
+            ]
+    else:
+        cached_instance_names[domain] = [
+            peertube.get_instance_name(domain),
+            datetime.now()
+        ]
+
+    return (cached_instance_names[domain])[0]
+
+
+
+
 
 
 app = Quart(__name__)
