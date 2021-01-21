@@ -65,32 +65,36 @@ Views: <b>{{ video.views }}</b> Likes: <b>{{ video.likes }}</b> Dislikes: <b>{{ 
 <br>
 <br>
 <br>
-{{ comments.total }} Comments
-<br>
-<br>
-{% for comment in comments.data %}
+{% if video.commentsEnabled %}
+    {{ comments.total }} Comments
+    <br>
+    <br>
+    {% for comment in comments.data %}
 
-    {% if not comment.isDeleted %}
-        <b>{{ comment.account.displayName }}</b>
-        <br>
-        {{ comment.text }}
-        <br>
-    {% else %}
-        <div style="color: #5F5F5F">
-            <b>Unknown</b>
+        {% if not comment.isDeleted %}
+            <b>{{ comment.account.displayName }}</b>
             <br>
-            Deleted Comment
-        </div>
-    {% endif %}
-    <i>
-    {% if comment.totalReplies == 1 %}
-        1 Reply
-    {% else %}
-        {{ comment.totalReplies }} Replies
-    {% endif %}
-    </i>
-    <br>
-    <br>
-{% endfor %}
+            {{ comment.text }}
+            <br>
+        {% else %}
+            <div style="color: #5F5F5F">
+                <b>Unknown</b>
+                <br>
+                Deleted Comment
+            </div>
+        {% endif %}
+        <i>
+        {% if comment.totalReplies == 1 %}
+            1 Reply
+        {% else %}
+            {{ comment.totalReplies }} Replies
+        {% endif %}
+        </i>
+        <br>
+        <br>
+    {% endfor %}
+{% else %}
+Comments disabled.
+{% endif %}
 
 {% endblock %}

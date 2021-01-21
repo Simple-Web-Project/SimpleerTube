@@ -28,6 +28,7 @@ class VideoWrapper:
         self.dislikes = a["dislikes"]
 
         self.embedPath = a["embedPath"]
+        self.commentsEnabled = a["commentsEnabled"]
 
         self.resolutions = []
         self.video = None
@@ -92,11 +93,16 @@ async def video(domain, id):
         quality = "best"
     vid = VideoWrapper(data, quality)
 
+    # only make a request for the comments if commentsEnabled
+    comments = ""
+    if data["commentsEnabled"]:
+        comments = peertube.get_comments(domain, id)
+
     return await render_template(
         "video.html",
         domain=domain,
         video=vid,
-        comments=peertube.get_comments(domain, id),
+        comments=comments,
         quality=quality,
         embed=embed,
         commit=commit,
