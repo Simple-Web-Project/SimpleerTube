@@ -116,7 +116,7 @@ async def search(domain, term):
     )
 
 
-@app.route("/<string:domain>/watch/<string:id>/")
+@app.route("/<string:domain>/videos/watch/<string:id>/")
 async def video(domain, id):
     data = peertube.video(domain, id)
     quality = request.args.get("quality")
@@ -141,7 +141,6 @@ async def video(domain, id):
         quality=quality,
         embed=embed,
     )
-
 
 if __name__ == "__main__":
     app.run()
