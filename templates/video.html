@@ -78,7 +78,10 @@ Views: <b>{{ video.views }}</b> Likes: <b>{{ video.likes }}</b> Dislikes: <b>{{ 
     {% for comment in comments.data %}
 
         {% if not comment.isDeleted %}
-            <b>{{ comment.account.displayName }}</b>
+        <a href="/{{ domain }}/accounts/{{ comment.account.name }}@{{ comment.account.host }}">
+                <b>{{ comment.account.displayName }}</b>
+            </a>
+
             <br>
             {{ comment.text }}
             <br>
