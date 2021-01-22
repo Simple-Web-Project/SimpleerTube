@@ -17,7 +17,7 @@ By:
     <img height="300" src="https://{{ video.channel.host }}{{ video.thumbnailPath }}">
     <p style="color: red">Please select a resolution:</p>
 {% elif embed %}
-    <embed height="300" src="https://{{ video.channel.host }}{{ video.embedPath }}">
+    <iframe src="https://{{ video.channel.host }}{{ video.embedPath }}" height="300" allowfullscreen="" frameborder="0"></iframe>
     <br>
     <b>Resolutions:</b>
 {% else %}
