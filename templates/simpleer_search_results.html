@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+    <head>
+        <title>SimpleerTube - Search Results</title>
+    </head>
+    <body>
+        <form action="/search" method="POST">
+            <label for="query"><b>SimpleerTube</b></label>
+            <input type="text" name="query" id="query" placeholder="Search"/>
+            <button type="submit">Search</button>
+        </form>
+        <br>
+        <br>
+        {{ results.total }} Results
+        <table>
+            {% for result in results.data %}
+                <tr>
+                    <td>
+                        <img src="{{ result.thumbnailUrl }}" height="150"/>
+                    </td>
+                    <td>
+                        <a href="/{{ result.channel.host }}/videos/watch/{{ result.uuid }}">
+                        {{ result.name }}
+                        </a>
+                        <br>
+                        {{ result.views }} Views
+                        <br>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        <footer>
+            <a href="https://codeberg.org/simple-web/peertube/src/commit/{{ commit }}">Commit: {{ commit }}</a>
+        </footer>
+    </body>
+</html>

@@ -105,7 +105,25 @@ app = Quart(__name__)
 
 @app.route("/")
 async def main():
-    return await render_template("index.html")
+    return await render_template(
+        "index.html",
+        commit=commit,
+    )
+
+@app.route("/search", methods = ["POST"])
+async def simpleer_search_redirect():
+    query = (await request.form)["query"]
+    return redirect("/search/" + query)
+
+@app.route("/search/<string:query>")
+async def simpleer_search(query):
+    return await render_template(
+        "simpleer_search_results.html",
+        commit=commit,
+
+        results=peertube.sepia_search(query)
+    )
+
 
 
 @app.route("/<string:domain>/")

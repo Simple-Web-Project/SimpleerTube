@@ -2,6 +2,14 @@ from bs4 import BeautifulSoup
 import requests
 import json
 
+# --- Sepiasearch ---
+def sepia_search(query):
+    url = "https://search.joinpeertube.org/api/v1/search/videos?search=" + query
+    return json.loads(requests.get(url).text)
+
+# --- ----
+
+
 def get_instance_name(domain):
     soup = BeautifulSoup(requests.get("https://" + domain).text, "lxml")
     title = soup.find('title')
