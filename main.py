@@ -109,12 +109,53 @@ async def main():
 
 
 @app.route("/<string:domain>/")
-async def domain_main(domain):
+async def instance(domain):
+    return redirect("/" + domain + "/videos/trending")
+
+@app.route("/<string:domain>/videos/local")
+async def instance_videos_local(domain):
     return await render_template(
-        "domain_index.html",
+        "instance/local.html",
         domain=domain,
         instance_name=get_instance_name(domain),
         commit=commit,
+
+        videos = peertube.get_videos_local(domain),
+    )
+
+@app.route("/<string:domain>/videos/trending")
+async def instance_videos_trending(domain):
+    return await render_template(
+        "instance/trending.html",
+        domain=domain,
+        instance_name=get_instance_name(domain),
+        commit=commit,
+
+        videos = peertube.get_videos_trending(domain),
+    )
+
+
+@app.route("/<string:domain>/videos/most-liked")
+async def instance_videos_most_liked(domain):
+    return await render_template(
+        "instance/most-liked.html",
+        domain=domain,
+        instance_name=get_instance_name(domain),
+        commit=commit,
+
+        videos = peertube.get_videos_most_liked(domain),
+    )
+
+
+@app.route("/<string:domain>/videos/recently-added")
+async def instance_videos_recently_added(domain):
+    return await render_template(
+        "instance/recently-added.html",
+        domain=domain,
+        instance_name=get_instance_name(domain),
+        commit=commit,
+
+        videos = peertube.get_videos_recently_added(domain),
     )
 
 

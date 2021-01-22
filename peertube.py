@@ -28,6 +28,22 @@ def get_comments(domain, id):
     url = "https://" + domain + "/api/v1/videos/" + id + "/comment-threads"
     return json.loads(requests.get(url).text)
 
+def get_videos_trending(domain):
+    url = "https://" + domain + "/api/v1/videos?sort=-trending"
+    return json.loads(requests.get(url).text)
+
+def get_videos_most_liked(domain):
+    url = "https://" + domain + "/api/v1/videos?sort=-likes"
+    return json.loads(requests.get(url).text)
+
+def get_videos_recently_added(domain):
+    url = "https://" + domain + "/api/v1/videos?sort=-publishedAt"
+    return json.loads(requests.get(url).text)
+
+def get_videos_local(domain):
+    url = "https://" + domain + "/api/v1/videos?sort=-publishedAt&filter=local"
+    return json.loads(requests.get(url).text)
+
 # --- Accounts ---
 
 def account_video_channels(domain, name):

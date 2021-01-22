@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block full_title %}{{ instance_name }} - Trending{% endblock %}
+
+{% block content %}
+
+<table>
+    {% for video in videos.data %}
+    <tr>
+        <td>
+            <img src="https://{{ domain }}/{{ video.thumbnailPath }}" height="150"/>
+        </td>
+        <td>
+            <a href="/{{ domain }}/videos/watch/{{ video.uuid }}">{{ video.name }}</a>
+            <br>
+            {{ video.views }} Views
+            <br>
+            <a href="/{{ domain }}/accounts/{{ video.channel.name }}@{{ video.channel.host }}">
+                <b>{{ video.channel.displayName }}</b>
+            </a>
+            <br>
+            <a href="/{{ domain }}/accounts/{{ video.account.name }}@{{ video.account.host }}">
+                {{ video.account.name }}@{{ video.account.host }}
+            </a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}
