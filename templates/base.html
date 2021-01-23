@@ -26,7 +26,38 @@
     <br>
     <br>
 
+    {% block head_content %}{% endblock %}
+
+    {% if pagination_url %}
+        {% if pages_total > 1 %}
+            {% if page > 1 %}
+                <a href="{{ pagination_url }}{{ page - 1 }}">Previous</a>
+                <b> | </b>
+            {% endif %}
+            Page {{ page }} of {{ pages_total }}
+            {% if page < pages_total %}
+                <b> | </b>
+                <a href="{{ pagination_url }}{{ page + 1}}">Next</a>
+            {%  endif %}
+        {% endif %}
+    {% endif %}
+    <br>
+
 	{% block content %}{% endblock %}
+
+    {% if pagination_url %}
+        {% if pages_total > 1 %}
+            {% if page > 1 %}
+                <a href="{{ pagination_url }}{{ page - 1 }}">Previous</a>
+                <b> | </b>
+            {% endif %}
+            Page {{ page }} of {{ pages_total }}
+            {% if page < pages_total %}
+                <b> | </b>
+                <a href="{{ pagination_url }}{{ page + 1}}">Next</a>
+            {%  endif %}
+        {% endif %}
+    {% endif %}
     <footer>
         <a href="https://codeberg.org/simple-web/peertube/src/commit/{{ commit }}">Commit: {{ commit }}</a>
     </footer>

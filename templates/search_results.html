@@ -3,10 +3,10 @@
 {% block title %}{{ search_term }} - {{ domain }}{% endblock %}
 
 {% block content %}
-<p>{{ amount }} results</p>
+<p>{{ results.total }} results</p>
 
 <table>
-{% for result in results %}
+{% for result in results.data %}
 <tr>
     <td>
 	<a href="/{{ domain }}/videos/watch/{{ result.uuid }}">

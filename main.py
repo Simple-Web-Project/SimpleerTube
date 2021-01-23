@@ -1,5 +1,6 @@
 from quart import Quart, request, render_template, redirect
 from datetime import datetime
+from math import ceil
 import peertube
 
 commit = "not found"
@@ -115,13 +116,21 @@ async def simpleer_search_redirect():
     query = (await request.form)["query"]
     return redirect("/search/" + query)
 
-@app.route("/search/<string:query>")
-async def simpleer_search(query):
+@app.route("/search/<string:query>", defaults = {"page": 1})
+@app.route("/search/<string:query>/<int:page>")
+async def simpleer_search(query, page):
+    results = peertube.sepia_search(query, (page - 1) * 10)
     return await render_template(
         "simpleer_search_results.html",
         commit=commit,
 
-        results=peertube.sepia_search(query)
+
+        results = results,
+        query = query,
+
+        # details for pagination
+        page=page,
+        pages_total=ceil(results["total"] / 10),
     )
 
 
@@ -130,51 +139,81 @@ async def simpleer_search(query):
 async def instance(domain):
     return redirect("/" + domain + "/videos/trending")
 
-@app.route("/<string:domain>/videos/local")
-async def instance_videos_local(domain):
+@app.route("/<string:domain>/videos/local", defaults = {"page": 1})
+@app.route("/<string:domain>/videos/local/<int:page>")
+async def instance_videos_local(domain, page):
+    vids = peertube.get_videos_local(domain, (page - 1) * 10)
     return await render_template(
         "instance/local.html",
         domain=domain,
         instance_name=get_instance_name(domain),
         commit=commit,
 
-        videos = peertube.get_videos_local(domain),
+        videos = vids,
+
+        # details for pagination
+        page=page,
+        pagination_url="/" + domain + "/videos/local/",
+        pages_total=ceil(vids["total"] / 10),
     )
 
-@app.route("/<string:domain>/videos/trending")
-async def instance_videos_trending(domain):
+@app.route("/<string:domain>/videos/trending", defaults = {"page": 1})
+@app.route("/<string:domain>/videos/trending/<int:page>")
+async def instance_videos_trending(domain, page):
+    vids = peertube.get_videos_trending(domain, (page - 1) * 10)
     return await render_template(
         "instance/trending.html",
         domain=domain,
         instance_name=get_instance_name(domain),
         commit=commit,
 
-        videos = peertube.get_videos_trending(domain),
+        videos = vids,
+
+        # details for pagination
+        page=page,
+        pagination_url="/" + domain + "/videos/trending/",
+        pages_total=ceil(vids["total"] / 10),
     )
 
 
-@app.route("/<string:domain>/videos/most-liked")
-async def instance_videos_most_liked(domain):
+@app.route("/<string:domain>/videos/most-liked", defaults = {"page": 1})
+@app.route("/<string:domain>/videos/most-liked/<int:page>")
+async def instance_videos_most_liked(domain, page):
+    vids = peertube.get_videos_most_liked(domain, (page - 1) * 10)
     return await render_template(
         "instance/most-liked.html",
         domain=domain,
         instance_name=get_instance_name(domain),
         commit=commit,
 
-        videos = peertube.get_videos_most_liked(domain),
+        videos = vids,
+
+        # details for pagination
+        page=page,
+        pagination_url="/" + domain + "/videos/most-liked/",
+        pages_total=ceil(vids["total"] / 10),
     )
 
 
-@app.route("/<string:domain>/videos/recently-added")
-async def instance_videos_recently_added(domain):
+@app.route("/<string:domain>/videos/recently-added", defaults = {"page": 1})
+@app.route("/<string:domain>/videos/recently-added/<int:page>")
+async def instance_videos_recently_added(domain, page):
+    vids = peertube.get_videos_recently_added(domain, (page - 1) * 10)
     return await render_template(
         "instance/recently-added.html",
         domain=domain,
         instance_name=get_instance_name(domain),
         commit=commit,
 
-        videos = peertube.get_videos_recently_added(domain),
+        videos = vids,
+
+        # details for pagination
+        page=page,
+        pagination_url="/" + domain + "/videos/recently-added/",
+        pages_total=ceil(vids["total"] / 10),
     )
+
+
 
 
 @app.route("/<string:domain>/search", methods=["POST"])
@@ -183,18 +222,23 @@ async def search_redirect(domain):
     return redirect("/" + domain + "/search/" + query)
 
 
-@app.route("/<string:domain>/search/<string:term>")
-async def search(domain, term):
-    amount, results = peertube.search(domain, term)
+@app.route("/<string:domain>/search/<string:term>", defaults = {"page": 1})
+@app.route("/<string:domain>/search/<string:term>/<int:page>")
+async def search(domain, term, page):
+    results = peertube.search(domain, term, (page - 1) * 10)
     return await render_template(
         "search_results.html",
         domain=domain,
         instance_name=get_instance_name(domain),
         commit=commit,
 
-        amount=amount,
         results=results,
         search_term=term,
+
+        # details for pagination
+        page=page,
+        pagination_url="/" + domain + "/search/" + term + "/",
+        pages_total=(results["total"] / 10)
     )
 
 
@@ -233,11 +277,13 @@ def build_channel_or_account_name(domain, name):
 # --- Accounts ---
 
 @app.route("/<string:domain>/accounts/<string:name>")
-async def accounts(domain, name):
+async def accounts_redirect(domain, name):
     return redirect("/" + domain + "/accounts/" + name + "/video-channels")
 
-@app.route("/<string:domain>/accounts/<string:name>/video-channels")
-async def account__video_channels(domain, name):
+@app.route("/<string:domain>/accounts/<string:name>/video-channels", defaults = {"page": 1})
+@app.route("/<string:domain>/accounts/<string:name>/video-channels/<int:page>")
+async def account__video_channels(domain, name, page):
+    video_channels = peertube.account_video_channels(domain, name, (page - 1) * 10)
     return await render_template(
         "accounts/video_channels.html",
         domain=domain,
@@ -246,11 +292,18 @@ async def account__video_channels(domain, name):
 
         name = name,
         account = get_account_info(build_channel_or_account_name(domain, name)),
-        video_channels = peertube.account_video_channels(domain, name)
+        video_channels = video_channels,
+
+        # details for pagination
+        page=page,
+        pagination_url="/" + domain + "/accounts/" + name + "/video-channels/",
+        pages_total=ceil(video_channels["total"] / 10)
     )
 
-@app.route("/<string:domain>/accounts/<string:name>/videos")
-async def account__videos(domain, name):
+@app.route("/<string:domain>/accounts/<string:name>/videos", defaults = {"page": 1})
+@app.route("/<string:domain>/accounts/<string:name>/videos/<int:page>")
+async def account__videos(domain, name, page):
+    vids = peertube.account_videos(domain, name, (page - 1) * 10)
     return await render_template(
         "accounts/videos.html",
         domain=domain,
@@ -259,7 +312,12 @@ async def account__videos(domain, name):
 
         name = name,
         account = get_account_info(build_channel_or_account_name(domain, name)),
-        videos = peertube.account_videos(domain, name)
+        videos = vids,
+
+        # details for pagination
+        page=page,
+        pagination_url="/" + domain + "/accounts/"  + name + "/videos/",
+        pages_total=ceil(vids["total"] / 10)
     )
 
 @app.route("/<string:domain>/accounts/<string:name>/about")
@@ -278,11 +336,13 @@ async def account__about(domain, name):
 # --- Video-Channels ---
 
 @app.route("/<string:domain>/video-channels/<string:name>")
-async def video_channels(domain, name):
+async def video_channels_redirect(domain, name):
     return redirect("/" + domain + "/video-channels/" + name + "/videos")
 
-@app.route("/<string:domain>/video-channels/<string:name>/videos")
-async def video_channels__videos(domain, name):
+@app.route("/<string:domain>/video-channels/<string:name>/videos", defaults = {"page": 1})
+@app.route("/<string:domain>/video-channels/<string:name>/videos/<int:page>")
+async def video_channels__videos(domain, name, page):
+    vids = peertube.video_channel_videos(domain, name, (page - 1) * 10)
     return await render_template(
         "video_channels/videos.html",
         domain=domain,
@@ -291,11 +351,16 @@ async def video_channels__videos(domain, name):
 
         name = name,
         video_channel = get_video_channel_info(build_channel_or_account_name(domain, name)),
-        videos = peertube.video_channel_videos(domain, name)
+        page=page,
+        pagination_url="/" + domain + "/video-channels/" + name + "/videos/",
+        pages_total=ceil(vids["total"] / 10),
+        videos = vids,
     )
 
-@app.route("/<string:domain>/video-channels/<string:name>/video-playlists")
-async def video_channels__video_playlists(domain, name):
+@app.route("/<string:domain>/video-channels/<string:name>/video-playlists", defaults = {"page": 1})
+@app.route("/<string:domain>/video-channels/<string:name>/video-playlists/<int:page>")
+async def video_channels__video_playlists(domain, name, page):
+    video_playlists = peertube.video_channel_video_playlists(domain, name, (page - 1) * 10)
     return await render_template(
         "video_channels/video_playlists.html",
         domain=domain,
@@ -304,7 +369,11 @@ async def video_channels__video_playlists(domain, name):
 
         name = name,
         video_channel = get_video_channel_info(build_channel_or_account_name(domain, name)),
-        video_playlists = peertube.video_channel_video_playlists(domain, name)
+        video_playlists = video_playlists,
+
+        page=page,
+        pagination_url="/" + domain + "/video-channels/" + name + "/video-playlists/",
+        pages_total=ceil(video_playlists["total"] / 10)
     )
 
 @app.route("/<string:domain>/video-channels/<string:name>/about")

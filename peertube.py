@@ -3,8 +3,8 @@ import requests
 import json
 
 # --- Sepiasearch ---
-def sepia_search(query):
-    url = "https://search.joinpeertube.org/api/v1/search/videos?search=" + query
+def sepia_search(query, start=0, count=10):
+    url = "https://search.joinpeertube.org/api/v1/search/videos?search=" + query + "&start=" + str(start) + "&count=" + str(count)
     return json.loads(requests.get(url).text)
 
 # --- ----
@@ -19,47 +19,41 @@ def get_instance_name(domain):
         return "PeerTube Instance"
 
 def video(domain, id):
-    video_url = "https://" + domain + "/api/v1/videos/" + id
-    video_object = json.loads(requests.get(video_url).text)
-    return video_object
+    url = "https://" + domain + "/api/v1/videos/" + id
+    return json.loads(requests.get(url).text)
 
-def search(domain, term, start = 0, count = 10):
-    search_url = "https://" + domain + "/api/v1/search/videos?start=" + str(start) + "&count=" + str(count) + "&search=" + term + "&sort=-match&searchTarget=local"
-    search_object = json.loads(requests.get(search_url).text)
-
-    amount = search_object["total"]
-    results = search_object["data"]
-
-    return amount, results
+def search(domain, term, start=0, count=10):
+    url = "https://" + domain + "/api/v1/search/videos?start=" + str(start) + "&count=" + str(count) + "&search=" + term + "&sort=-match&searchTarget=local"
+    return json.loads(requests.get(url).text)
 
 def get_comments(domain, id):
     url = "https://" + domain + "/api/v1/videos/" + id + "/comment-threads"
     return json.loads(requests.get(url).text)
 
-def get_videos_trending(domain):
-    url = "https://" + domain + "/api/v1/videos?sort=-trending"
+def get_videos_trending(domain, start=0, count=10):
+    url = "https://" + domain + "/api/v1/videos?sort=-trending&start=" + str(start) + "&count=" + str(count)
     return json.loads(requests.get(url).text)
 
-def get_videos_most_liked(domain):
-    url = "https://" + domain + "/api/v1/videos?sort=-likes"
+def get_videos_most_liked(domain, start=0, count=10):
+    url = "https://" + domain + "/api/v1/videos?sort=-likes&start=" + str(start) + "&count=" + str(count)
     return json.loads(requests.get(url).text)
 
-def get_videos_recently_added(domain):
-    url = "https://" + domain + "/api/v1/videos?sort=-publishedAt"
+def get_videos_recently_added(domain, start=0, count=10):
+    url = "https://" + domain + "/api/v1/videos?sort=-publishedAt&start=" + str(start) + "&count=" + str(count)
     return json.loads(requests.get(url).text)
 
-def get_videos_local(domain):
-    url = "https://" + domain + "/api/v1/videos?sort=-publishedAt&filter=local"
+def get_videos_local(domain, start=0, count=10):
+    url = "https://" + domain + "/api/v1/videos?sort=-publishedAt&filter=local&start=" + str(start) + "&count=" + str(count)
     return json.loads(requests.get(url).text)
 
 # --- Accounts ---
 
-def account_video_channels(domain, name):
-    url = "https://" + domain + "/api/v1/accounts/" + name + "/video-channels"
+def account_video_channels(domain, name, start=0, count=10):
+    url = "https://" + domain + "/api/v1/accounts/" + name + "/video-channels?start=" + str(start) + "&count=" + str(count)
     return json.loads(requests.get(url).text)
 
-def account_videos(domain, name):
-    url = "https://" + domain + "/api/v1/accounts/" + name + "/videos"
+def account_videos(domain, name, start=0, count=10):
+    url = "https://" + domain + "/api/v1/accounts/" + name + "/videos?start=" + str(start) + "&count=" + str(count)
     return json.loads(requests.get(url).text)
 
 def account(domain, name):
@@ -68,12 +62,12 @@ def account(domain, name):
 
 # --- Video Channels ---
 
-def video_channel_videos(domain, name):
-    url = "https://" + domain + "/api/v1/video-channels/" + name + "/videos"
+def video_channel_videos(domain, name, start=0, count=10):
+    url = "https://" + domain + "/api/v1/video-channels/" + name + "/videos?start=" + str(start) + "&count=" + str(count)
     return json.loads(requests.get(url).text)
 
-def video_channel_video_playlists(domain, name):
-    url = "https://" + domain + "/api/v1/video-channels/" + name + "/video-playlists"
+def video_channel_video_playlists(domain, name, start=0, count=10):
+    url = "https://" + domain + "/api/v1/video-channels/" + name + "/video-playlists?start=" + str(start) + "&count=" + str(count)
     return json.loads(requests.get(url).text)
 
 def video_channel(domain, name):
