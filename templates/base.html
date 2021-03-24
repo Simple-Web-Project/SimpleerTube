@@ -11,58 +11,59 @@
 
     <!-- I know that inline CSS is not .. the best, but I'll move it to an external file for sure! definitely! -->
     <body>
+        <h2>{{ instance_name }}</h2>
         <form action="/{{ domain }}/search" method="POST">
-            <label for="query"><b>{{ instance_name }}</b></label>
-	        <input type="text" name="query" id="query" placeholder="Search" value="{{ search_term }}"/>
+            <!--<label for="query"><b>{{ instance_name }}</b></label>-->
+            <input size="45" type="text" name="query" id="query" placeholder="Search" value="{{ search_term }}"/>
             <button type="submit">Search</button>
         </form>
 
-	<br>
+        <br>
 
-    <a href="/{{ domain }}/videos/local">Local</a>
-    <b> | </b>
-    <a href="/{{ domain }}/videos/trending">Trending</a>
-    <b> | </b>
-    <a href="/{{ domain }}/videos/most-liked">Most Liked</a>
-    <b> | </b>
-    <a href="/{{ domain }}/videos/recently-added">Recently Added</a>
-    <br>
-    <br>
+        <a href="/{{ domain }}/videos/local">Local</a>
+        <b> | </b>
+        <a href="/{{ domain }}/videos/trending">Trending</a>
+        <b> | </b>
+        <a href="/{{ domain }}/videos/most-liked">Most Liked</a>
+        <b> | </b>
+        <a href="/{{ domain }}/videos/recently-added">Recently Added</a>
+        <br>
+        <br>
 
-    {% block head_content %}{% endblock %}
+        {% block head_content %}{% endblock %}
 
-    {% if pagination_url %}
-        {% if pages_total > 1 %}
-            {% if page > 1 %}
-                <a href="{{ pagination_url }}{{ page - 1 }}">Previous</a>
-                <b> | </b>
+        {% if pagination_url %}
+            {% if pages_total > 1 %}
+                {% if page > 1 %}
+                    <a href="{{ pagination_url }}{{ page - 1 }}">Previous</a>
+                    <b> | </b>
+                {% endif %}
+                Page {{ page }} of {{ pages_total }}
+                {% if page < pages_total %}
+                    <b> | </b>
+                    <a href="{{ pagination_url }}{{ page + 1}}">Next</a>
+                {%  endif %}
             {% endif %}
-            Page {{ page }} of {{ pages_total }}
-            {% if page < pages_total %}
-                <b> | </b>
-                <a href="{{ pagination_url }}{{ page + 1}}">Next</a>
-            {%  endif %}
         {% endif %}
-    {% endif %}
-    <br>
+        <br>
 
-	{% block content %}{% endblock %}
+        {% block content %}{% endblock %}
 
-    {% if pagination_url %}
-        {% if pages_total > 1 %}
-            {% if page > 1 %}
-                <a href="{{ pagination_url }}{{ page - 1 }}">Previous</a>
-                <b> | </b>
+        {% if pagination_url %}
+            {% if pages_total > 1 %}
+                {% if page > 1 %}
+                    <a href="{{ pagination_url }}{{ page - 1 }}">Previous</a>
+                    <b> | </b>
+                {% endif %}
+                Page {{ page }} of {{ pages_total }}
+                {% if page < pages_total %}
+                    <b> | </b>
+                    <a href="{{ pagination_url }}{{ page + 1}}">Next</a>
+                {%  endif %}
             {% endif %}
-            Page {{ page }} of {{ pages_total }}
-            {% if page < pages_total %}
-                <b> | </b>
-                <a href="{{ pagination_url }}{{ page + 1}}">Next</a>
-            {%  endif %}
         {% endif %}
-    {% endif %}
-    <footer>
-        <a href="https://git.sr.ht/~metalune/peertube/tree/{{ commit }}">Commit: {{ commit }}</a>
-    </footer>
+        <footer>
+            <a href="https://git.sr.ht/~metalune/peertube/tree/{{ commit }}">Commit: {{ commit }}</a>
+        </footer>
     </body>
 </html>
