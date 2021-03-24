@@ -6,13 +6,18 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     </head>
     <body>
-        <form action="/search" method="POST">
-            <label for="query"><b>SimpleerTube</b></label>
-            <input type="text" name="query" id="query" placeholder="Search"/>
-            <button type="submit">Search</button>
-        </form>
-        <footer>
-            <a href="https://codeberg.org/simple-web/peertube/src/commit/{{ commit }}">Commit: {{ commit }}</a>
-        </footer>
+        <center>
+            <h2>SimpleerTube</h2>
+
+            <form action="/search" method="POST">
+                <input size="45" type="text" name="query" id="query" placeholder="Search"/>
+                <button type="submit">Search</button>
+            </form>
+            <br>
+            <br>
+            <footer>
+                <a href="https://codeberg.org/simple-web/peertube/src/commit/{{ commit }}">Commit: {{ commit }}</a>
+            </footer>
+        </center>
     </body>
 </html>
