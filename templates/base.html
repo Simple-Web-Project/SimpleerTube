@@ -2,13 +2,15 @@
 
 <html>
     <head>
+        <link rel="stylesheet" href="/static/style.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         {% block head %}
 	<title>{% block full_title %}{% block title %}{% endblock %} - SimpleerTube{% endblock %}</title>
 	{% endblock %}
     </head>
 
     <!-- I know that inline CSS is not .. the best, but I'll move it to an external file for sure! definitely! -->
-    <body style="max-width: 800px; margin: 10px auto; padding-left: 5px; padding-right: 5px">
+    <body>
         <form action="/{{ domain }}/search" method="POST">
             <label for="query"><b>{{ instance_name }}</b></label>
 	        <input type="text" name="query" id="query" placeholder="Search" value="{{ search_term }}"/>
