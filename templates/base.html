@@ -13,7 +13,6 @@
     <body>
         <h2>{{ instance_name }}</h2>
         <form action="/{{ domain }}/search" method="POST">
-            <!--<label for="query"><b>{{ instance_name }}</b></label>-->
             <input size="45" type="text" name="query" id="query" placeholder="Search" value="{{ search_term }}"/>
             <button type="submit">Search</button>
         </form>
