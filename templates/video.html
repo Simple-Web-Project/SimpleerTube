@@ -62,9 +62,9 @@ Views: <b>{{ video.views }}</b> Likes: <b>{{ video.likes }}</b> Dislikes: <b>{{ 
     <tr>
 	<td><b>Tags</b></td>
 	<td>
-	    {% for tag in video.tags %}
-		{{ tag }}
-	    {% endfor %}
+    {% for tag in video.tags %}
+        <span class="tag">{{ tag }}</span>
+    {% endfor %}
 	</td>
     </tr>
 </table>
