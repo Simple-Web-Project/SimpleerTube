@@ -2,6 +2,10 @@ from quart import Quart, request, render_template, redirect
 from datetime import datetime
 from math import ceil
 import peertube
+import html2text
+
+h2t = html2text.HTML2Text()
+h2t.ignore_links = True
 
 commit = "not found"
 with open(".git/refs/heads/main") as file:
@@ -241,7 +245,6 @@ async def search(domain, term, page):
         pages_total=(results["total"] / 10)
     )
 
-
 @app.route("/<string:domain>/videos/watch/<string:id>/")
 async def video(domain, id):
     data = peertube.video(domain, id)
@@ -255,6 +258,16 @@ async def video(domain, id):
     comments = ""
     if data["commentsEnabled"]:
         comments = peertube.get_comments(domain, id)
+
+        # Strip the HTML from the comments and convert them to plain text
+        new_comments = {"total": comments["total"], "data": []}
+        for comment in comments["data"]:
+            text = h2t.handle(comment["text"]).strip().strip("\n")
+            comment["text"] = text
+            new_comments["data"].append(comment)
+        comments = new_comments
+            
+
 
     return await render_template(
         "video.html",
