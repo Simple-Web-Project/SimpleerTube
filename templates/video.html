@@ -29,7 +29,11 @@ By:
 {% endif %}
 
 {% for resolution in video.resolutions %}
-    <a href="?quality={{ resolution.id }}">{{ resolution.label }}</a>
+    {% if resolution.label == "0p" %}
+        <a href="?quality={{ resolution.id }}">Audio Only</a>
+    {% else %}
+        <a href="?quality={{ resolution.id }}">{{ resolution.label }}</a>
+    {% endif %}
 {% endfor %}
 <a href="?embed=1">Embedded</a>
 
