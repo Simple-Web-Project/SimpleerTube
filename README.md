@@ -3,7 +3,7 @@
 Active Known Instances:
 - https://simpleertube.metalune.xyz
 
-If you want to add your instance to this list, message us on IRC (#simple-web on irc.freenode.net).
+If you want to add your instance to this list, message us on IRC (#simple-web on irc.libera.chat).
 
 For the rest of the documentation, https://simpleertube.metalune.xyz will be used as an example instance.
 
