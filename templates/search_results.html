@@ -5,28 +5,28 @@
 {% block content %}
 <p>{{ results.total }} results</p>
 
-<table>
-{% for result in results.data %}
-<tr>
-    <td>
-	<a href="/{{ domain }}/videos/watch/{{ result.uuid }}">
-	    <img src="https://{{ domain }}{{ result.thumbnailPath }}" height="150"/>
-	</a>
-    </td>
-    <td>
-	<a href="/{{ domain }}/videos/watch/{{ result.uuid }}">{{ result.name }}</a>
-	<br>
-	{{ result.views }} Views
-	<br>
-    <a href="/{{ domain }}/accounts/{{ result.channel.name }}@{{ result.channel.host }}">
-        <b>{{ result.channel.displayName }}</b>
-    </a>
-    <br>
-    <a href="/{{ domain }}/accounts/{{ result.account.name }}@{{ result.account.host }}">
-        {{ result.account.name }}@{{ result.account.host }}
-    </a>
-    </td>
-</tr>
-{% endfor %}
-</table>
+<div id="wrap">
+    {% for result in results.data %}
+    <div class="result-wrapper">
+        <a href="/{{ domain }}/videos/watch/{{ result.uuid }}">
+            <img src="https://{{ domain }}{{ result.thumbnailPath }}" height="150"/>
+        </a>
+
+        <div class="result-info">
+            <a href="/{{ domain }}/videos/watch/{{ result.uuid }}">{{ result.name }}</a>
+            <br>
+            {{ result.views }} Views
+            <br>
+            <a href="/{{ domain }}/accounts/{{ result.channel.name }}@{{ result.channel.host }}">
+                <b>{{ result.channel.displayName }}</b>
+            </a>
+            <br>
+            <a href="/{{ domain }}/accounts/{{ result.account.name }}@{{ result.account.host }}">
+                {{ result.account.name }}@{{ result.account.host }}
+            </a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
 {% endblock %}

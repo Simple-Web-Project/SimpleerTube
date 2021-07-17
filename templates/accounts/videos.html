@@ -8,24 +8,23 @@
 <br>
 <br>
 
-<table>
-{% for video in videos.data %}
-    <tr>
-        <td>
+<div id="wrap">
+    {% for video in videos.data %}
+        <div class="result-wrapper">
             <a href="/{{ domain }}/videos/watch/{{ video.uuid }}">
                 <img src="https://{{ domain }}{{ video.thumbnailPath }}" height="150"/>
             </a>
-        </td>
-        <td>
-            <a href="/{{ domain }}/videos/watch/{{ video.uuid }}">{{ video.name }}</a>
-            <br>
-            {{ video.views }} Views
-            <br>
-            <b>{{ video.channel.displayName }}</b>
-            </a>
-        </td>
-    </tr>
-{% endfor %}
-</table>
+
+            <div class="result-info">
+                <a href="/{{ domain }}/videos/watch/{{ video.uuid }}">{{ video.name }}</a>
+                <br>
+                {{ video.views }} Views
+                <br>
+                <b>{{ video.channel.displayName }}</b>
+                </a>
+            </div>
+        </div>
+    {% endfor %}
+</div>
 
 {% endblock %}

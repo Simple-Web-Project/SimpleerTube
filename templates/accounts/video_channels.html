@@ -8,21 +8,21 @@
 <br>
 <br>
 
-<table>
-{% for channel in video_channels.data %}
-    <tr>
-        <td>
+
+<div id="wrap">
+    {% for channel in video_channels.data %}
+        <div class="result-wrapper">
             <img src="https://{{ domain }}{{ channel.avatar.path }}" height="75"/>
-        </td>
-        <td>
-            <a href="/{{ domain }}/video-channels/{{ channel.name }}@{{ channel.host }}">
-                <b>{{ channel.displayName }}</b>
-            </a>
-            <br>
-            {{ channel.followersCount }} Followers
-        </td>
-    </tr>
-{% endfor %}
-</table>
+
+            <div class="result-info">
+                <a href="/{{ domain }}/video-channels/{{ channel.name }}@{{ channel.host }}">
+                    <b>{{ channel.displayName }}</b>
+                </a>
+                <br>
+                {{ channel.followersCount }} Followers
+            </div>
+        </div>
+    {% endfor %}
+</div>
 
 {% endblock %}

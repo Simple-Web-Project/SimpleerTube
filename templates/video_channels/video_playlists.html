@@ -8,20 +8,18 @@
 <br>
 <br>
 
-<table>
-{% for playlist in video_playlists.data %}
-    <tr>
-        <td>
+<div id="wrap">
+    {% for playlist in video_playlists.data %}
+        <div class="result-wrapper">
             <img src="https://{{ domain }}{{ playlist.thumbnailPath }}" height="150"/>
-        </td>
-        <td>
-            <b>{{ playlist.displayName }}</b>
-            <br>
-            {{ playlist.videosLength }} Videos
-        </td>
-    </tr>
-
-{% endfor %}
-</table>
+           
+            <div class="result-info">
+                <b>{{ playlist.displayName }}</b>
+                <br>
+                {{ playlist.videosLength }} Videos
+            </div>
+        </div>
+    {% endfor %}
+</div>
 
 {% endblock %}

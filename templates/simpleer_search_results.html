@@ -30,24 +30,23 @@
         <br>
 
         {{ results.total }} Results
-        <table>
-            {% for result in results.data %}
-                <tr>
-                    <td>
-                        <img src="{{ result.thumbnailUrl }}" height="150"/>
-                    </td>
-                    <td>
-                        <a href="/{{ result.channel.host }}/videos/watch/{{ result.uuid }}">
-                        {{ result.name }}
-                        </a>
-                        <br>
-                        {{ result.views }} Views
-                        <br>
-                    </td>
-                </tr>
-            {% endfor %}
-        </table>
 
+        <div id="wrap">
+            {% for result in results.data %}
+            <div class="result-wrapper">
+                <img src="{{ result.thumbnailUrl }}" height="150">
+                <div class="result-info">
+                    <a href="/{{ result.channel.host }}/videos/watch/{{ result.uuid }}">{{ result.name }}</a>
+                    <br>
+                    {% if result.views == 1%}
+                    1 View
+                    {% else %}
+                    {{ result.views }} Views
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
 
         {% if pages_total > 1 %}
             {% if page > 1 %}

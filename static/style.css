@@ -1,9 +1,27 @@
 body {
-    max-width: 800px;
+    max-width: 1200px;
     margin: 10px auto;
     padding-left: 5px;
     padding-right: 5px;
 }
+
+/* search results related */
+
+#wrap {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.result-wrapper {
+    width: 300px;
+    margin: 10px;
+}
+ 
+.result-info {
+    display: block;
+}
+
+/* end of search results related */
 
 .tag {
     background-color: lightgray;

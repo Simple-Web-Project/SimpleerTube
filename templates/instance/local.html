@@ -4,27 +4,26 @@
 
 {% block content %}
 
-<table>
+<div id="wrap">
     {% for video in videos.data %}
-    <tr>
-        <td>
+        <div class="result-wrapper">
             <img src="https://{{ domain }}{{ video.thumbnailPath }}" height="150"/>
-        </td>
-        <td>
-            <a href="/{{ domain }}/videos/watch/{{ video.uuid }}">{{ video.name }}</a>
-            <br>
-            {{ video.views }} Views
-            <br>
-            <a href="/{{ domain }}/accounts/{{ video.channel.name }}@{{ video.channel.host }}">
-                <b>{{ video.channel.displayName }}</b>
-            </a>
-            <br>
-            <a href="/{{ domain }}/accounts/{{ video.account.name }}@{{ video.account.host }}">
-                {{ video.account.name }}@{{ video.account.host }}
-            </a>
-        </td>
-    </tr>
+
+            <div class="result-info">
+                <a href="/{{ domain }}/videos/watch/{{ video.uuid }}">{{ video.name }}</a>
+                <br>
+                {{ video.views }} Views
+                <br>
+                <a href="/{{ domain }}/accounts/{{ video.channel.name }}@{{ video.channel.host }}">
+                    <b>{{ video.channel.displayName }}</b>
+                </a>
+                <br>
+                <a href="/{{ domain }}/accounts/{{ video.account.name }}@{{ video.account.host }}">
+                    {{ video.account.name }}@{{ video.account.host }}
+                </a>
+            </div>
+        </div>
     {% endfor %}
-</table>
+</div>
 
 {% endblock %}
