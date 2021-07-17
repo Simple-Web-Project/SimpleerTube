@@ -7,13 +7,6 @@ import html2text
 h2t = html2text.HTML2Text()
 h2t.ignore_links = True
 
-commit = "not found"
-with open(".git/refs/heads/main") as file:
-    for line in file:
-        commit = line
-        # we only expect one line
-        break
-
 # Wrapper, only containing information that's important for us, and in some cases provides simplified ways to get information
 class VideoWrapper:
     def __init__(self, a, quality):
@@ -112,7 +105,6 @@ app = Quart(__name__)
 async def main():
     return await render_template(
         "index.html",
-        commit=commit,
     )
 
 @app.route("/search", methods = ["POST"])
@@ -126,7 +118,6 @@ async def simpleer_search(query, page):
     results = peertube.sepia_search(query, (page - 1) * 10)
     return await render_template(
         "simpleer_search_results.html",
-        commit=commit,
 
 
         results = results,
@@ -151,7 +142,6 @@ async def instance_videos_local(domain, page):
         "instance/local.html",
         domain=domain,
         instance_name=get_instance_name(domain),
-        commit=commit,
 
         videos = vids,
 
@@ -169,7 +159,6 @@ async def instance_videos_trending(domain, page):
         "instance/trending.html",
         domain=domain,
         instance_name=get_instance_name(domain),
-        commit=commit,
 
         videos = vids,
 
@@ -188,7 +177,6 @@ async def instance_videos_most_liked(domain, page):
         "instance/most-liked.html",
         domain=domain,
         instance_name=get_instance_name(domain),
-        commit=commit,
 
         videos = vids,
 
@@ -207,7 +195,6 @@ async def instance_videos_recently_added(domain, page):
         "instance/recently-added.html",
         domain=domain,
         instance_name=get_instance_name(domain),
-        commit=commit,
 
         videos = vids,
 
@@ -234,7 +221,6 @@ async def search(domain, term, page):
         "search_results.html",
         domain=domain,
         instance_name=get_instance_name(domain),
-        commit=commit,
 
         results=results,
         search_term=term,
@@ -272,7 +258,6 @@ async def video(domain, id):
     return await render_template(
         "video.html",
         domain=domain,
-        commit=commit,
         instance_name=get_instance_name(domain),
 
         video=vid,
@@ -300,7 +285,6 @@ async def account__video_channels(domain, name, page):
     return await render_template(
         "accounts/video_channels.html",
         domain=domain,
-        commit=commit,
         instance_name=get_instance_name(domain),
 
         name = name,
@@ -320,7 +304,6 @@ async def account__videos(domain, name, page):
     return await render_template(
         "accounts/videos.html",
         domain=domain,
-        commit=commit,
         instance_name=get_instance_name(domain),
 
         name = name,
@@ -338,7 +321,6 @@ async def account__about(domain, name):
     return await render_template(
         "accounts/about.html",
         domain=domain,
-        commit=commit,
         instance_name=get_instance_name(domain),
 
         name = name,
@@ -359,7 +341,6 @@ async def video_channels__videos(domain, name, page):
     return await render_template(
         "video_channels/videos.html",
         domain=domain,
-        commit=commit,
         instance_name=get_instance_name(domain),
 
         name = name,
@@ -377,7 +358,6 @@ async def video_channels__video_playlists(domain, name, page):
     return await render_template(
         "video_channels/video_playlists.html",
         domain=domain,
-        commit=commit,
         instance_name=get_instance_name(domain),
 
         name = name,
@@ -394,7 +374,6 @@ async def video_channels__about(domain, name):
     return await render_template(
         "video_channels/about.html",
         domain=domain,
-        commit=commit,
         instance_name=get_instance_name(domain),
 
         name = name,
