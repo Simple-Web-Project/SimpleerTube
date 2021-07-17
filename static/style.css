@@ -1,5 +1,4 @@
 body {
-    background-color: lightyellow;
     max-width: 800px;
     margin: 10px auto;
     padding-left: 5px;
@@ -7,7 +6,59 @@ body {
 }
 
 .tag {
-    background-color: lightgrey;    
+    background-color: lightgray;
     padding: 3px 7px;
     display: inline;
+}
+
+button {
+    font-size: 1rem;
+    padding: 4px 10px;
+    border: 2px solid #888888;
+}
+
+input {
+    font-size: 1rem;
+    padding: 4px;
+    border: 2px solid #888888;
+}
+
+input:focus,
+button:focus {
+    outline: 2px solid #5d94ff;
+}
+
+a:visited {
+    text-decoration: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+@media screen and (prefers-color-scheme: dark) {
+    body {
+        background-color: #212529;
+        color: #f8f9fa;
+    }
+
+    a:visited {
+        color: #9759f6;
+    }
+
+    a {
+        color: #599bf6;
+    }
+
+    button,
+    input {
+        background-color: #131618;
+        border-color: #495057;
+        color: #f8f9fa;
+    }
+
+    .tag {
+        background-color: #495057;
+        color: #f8f9fa;
+    }
 }
