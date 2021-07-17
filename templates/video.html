@@ -14,14 +14,14 @@ By:
 
 <br>
 {% if video.no_quality_selected and not embed %}
-    <img height="300" src="https://{{ video.channel.host }}{{ video.thumbnailPath }}">
+    <img height="300" style="max-width: 100%" src="https://{{ video.channel.host }}{{ video.thumbnailPath }}">
     <p style="color: red">Please select a resolution:</p>
 {% elif embed %}
     <iframe src="https://{{ video.channel.host }}{{ video.embedPath }}" height="300" allowfullscreen="" frameborder="0"></iframe>
     <br>
     <b>Resolutions:</b>
 {% else %}
-    <video height="300" controls>
+    <video height="300" style="max-width: 100%" controls>
         <source src="{{ video.video }}">
     </video>
     <br>
