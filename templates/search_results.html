@@ -5,6 +5,7 @@
 {% block content %}
 <p>{{ results.total }} results</p>
 
+<hr>
 <div id="wrap">
     {% for result in results.data %}
     <div class="result-wrapper">
@@ -28,5 +29,6 @@
     </div>
     {% endfor %}
 </div>
+<hr>
 
 {% endblock %}

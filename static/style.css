@@ -10,6 +10,7 @@ body {
 #wrap {
     display: flex;
     flex-wrap: wrap;
+    justify-content: space-evenly;
 }
 
 .result-wrapper {
