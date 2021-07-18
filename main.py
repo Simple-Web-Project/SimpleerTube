@@ -35,12 +35,28 @@ class VideoWrapper:
         if len(self.files) == 0:
             self.files = ((a["streamingPlaylists"])[0])["files"]
 
+        self.default_res = None
+
         for entry in self.files:
             resolution = (entry["resolution"])["id"]
             self.resolutions.append(entry["resolution"])
 
+            # chose the default quality
+            if resolution != 0 and quality == None:
+                if self.default_res == None:
+                    self.default_res = resolution
+                    self.video = entry["fileUrl"]
+                elif abs(720 - resolution) < abs(720 - self.default_res):
+                    self.default_res = resolution
+                    self.video = entry["fileUrl"]
+
             if str(resolution) == str(quality):
                 self.video = entry["fileUrl"]
+
+        if quality == None:
+            self.quality = self.default_res
+        else:
+            self.quality = quality
 
         self.no_quality_selected = not self.video
 
@@ -236,9 +252,8 @@ async def video(domain, id):
     data = peertube.video(domain, id)
     quality = request.args.get("quality")
     embed = request.args.get("embed")
-    if quality == None:
-        quality = "best"
     vid = VideoWrapper(data, quality)
+    quality = int(vid.quality)
 
     # only make a request for the comments if commentsEnabled
     comments = ""
