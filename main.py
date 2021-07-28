@@ -3,6 +3,7 @@ from datetime import datetime
 from math import ceil
 import peertube
 import html2text
+import sys
 
 h2t = html2text.HTML2Text()
 h2t.ignore_links = True
@@ -281,7 +282,6 @@ async def video(domain, id):
         embed=embed,
     )
 
-
 def build_channel_or_account_name(domain, name):
     if '@' in name:
         return name
@@ -397,4 +397,13 @@ async def video_channels__about(domain, name):
     )
 
 if __name__ == "__main__":
-    app.run()
+    if len(sys.argv) == 3:
+        interface = sys.argv[1]
+        port = sys.argv[2]
+    elif len(sys.argv) == 2:
+        interface = "127.0.0.1"
+        port = sys.argv[1]
+    else:
+        interface = "127.0.0.1"
+        port = "5000"
+    app.run(host=interface, port=port)
