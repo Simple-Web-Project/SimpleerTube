@@ -157,12 +157,7 @@ async def simpleer_search(query, page):
 @app.route("/<string:domain>/")
 async def instance(domain):
     # favicon.ico is not a domain name
-    if domain == "favicon.ico":
-        return await render_template(
-            "error.html",
-            error_number = "404",
-            error_reason = "We don't have a favicon yet. If you would like to contribute one, please send it to ~metalune/public-inbox@lists.sr.ht"
-        ), 404
+    if domain == "favicon.ico": return await favicon()
     return redirect("/" + domain + "/videos/trending")
 
 @app.route("/<string:domain>/videos/local", defaults = {"page": 1})
@@ -429,6 +424,15 @@ async def subtitles(domain, id, lang):
             error_number = "500",
             error_reason = e
         ), 500
+
+# --- Favicon ---
+@app.route("/favicon.ico")
+async def favicon():
+    return await render_template(
+        "error.html",
+        error_number = "404",
+        error_reason = "We don't have a favicon yet. If you would like to contribute one, please send it to ~metalune/public-inbox@lists.sr.ht"
+    ), 404
 
 if __name__ == "__main__":
     if len(sys.argv) == 3:
