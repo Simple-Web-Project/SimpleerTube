@@ -12,6 +12,7 @@ h2t.ignore_links = True
 class VideoWrapper:
     def __init__(self, a, quality):
         self.name = a["name"]
+        self.uuid = a["uuid"]
         self.channel = a["channel"]
         self.description = a["description"]
         self.thumbnailPath = a["thumbnailPath"]
@@ -19,6 +20,7 @@ class VideoWrapper:
         self.category = a["category"]
         self.licence = a["licence"]
         self.language = a["language"]
+        self.captions = a["captions"]
         self.privacy = a["privacy"]
         self.tags = a["tags"]
 
@@ -258,6 +260,7 @@ async def search(domain, term, page):
 @app.route("/<string:domain>/videos/watch/<string:id>/")
 async def video(domain, id):
     data = peertube.video(domain, id)
+    data["captions"] = peertube.video_captions(domain, id)
     quality = request.args.get("quality")
     embed = request.args.get("embed")
     vid = VideoWrapper(data, quality)
@@ -402,6 +405,18 @@ async def video_channels__about(domain, name):
         video_channel = get_video_channel_info(build_channel_or_account_name(domain, name)),
         about = peertube.video_channel(domain, name)
     )
+
+# --- Subtitles/captions proxying ---
+@app.route("/<string:domain>/videos/watch/<string:id>/<string:lang>.vtt")
+async def subtitles(domain, id, lang):
+    try:
+        return peertube.video_captions_download(domain, id, lang)
+    except Exception as e:
+        return await render_template(
+            "error.html",
+            error_number = "500",
+            error_reason = e
+        ), 500
 
 if __name__ == "__main__":
     if len(sys.argv) == 3:

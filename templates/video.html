@@ -22,7 +22,8 @@ By:
     <b>Resolutions:</b>
 {% else %}
     <video height="300" style="max-width: 100%" controls>
-        <source src="{{ video.video }}">
+        <source src="{{ video.video }}">{% for track in video.captions.data %}
+	<track kind="subtitles" srclang="{{ track.language.id }}" label="{{ track.language.label }}" src="/{{ domain }}/videos/watch/{{ video.uuid }}/{{ track.language.id }}.vtt">{% endfor %}
     </video>
     <br>
     <b>Resolutions:</b>

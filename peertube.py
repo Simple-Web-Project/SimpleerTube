@@ -22,6 +22,16 @@ def video(domain, id):
     url = "https://" + domain + "/api/v1/videos/" + id
     return json.loads(requests.get(url).text)
 
+def video_captions(domain, id):
+    url = "https://" + domain + "/api/v1/videos/" + id + "/captions"
+    return json.loads(requests.get(url).text)
+
+def video_captions_download(domain, id, lang):
+    # URL is hardcoded to prevent further proxying. URL may change with updates, see captions API
+    # eg. https://kolektiva.media/api/v1/videos/9c9de5e8-0a1e-484a-b099-e80766180a6d/captions
+    url = "https://" + domain + "/lazy-static/video-captions/" + id + '-' + lang + ".vtt"
+    return requests.get(url).text
+
 def search(domain, term, start=0, count=10):
     url = "https://" + domain + "/api/v1/search/videos?start=" + str(start) + "&count=" + str(count) + "&search=" + term + "&sort=-match&searchTarget=local"
     return json.loads(requests.get(url).text)
