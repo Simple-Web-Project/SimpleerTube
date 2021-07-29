@@ -67,15 +67,16 @@ class VideoWrapper:
 
 # Helper Class for using caches
 class Cache:
-    def __init__(self):
+    def __init__(self, criteria = lambda diff: diff.days > 0):
         self.dict = {}
+        self.criteria = criteria
 
     def get(self, arg, func):
         if arg in self.dict:
             last_time_updated = (self.dict[arg])[1]
             time_diff = datetime.now() - last_time_updated
 
-            if time_diff.days > 0:
+            if self.criteria(time_diff):
                 self.dict[arg] = [
                     func(arg),
                     datetime.now()
