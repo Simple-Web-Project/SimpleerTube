@@ -434,6 +434,19 @@ async def favicon():
         error_reason = "We don't have a favicon yet. If you would like to contribute one, please send it to ~metalune/public-inbox@lists.sr.ht"
     ), 404
 
+# --- OpenSearch ---
+@app.route("/opensearch.xml")
+async def opensearch():
+    try:
+        with open('opensearch.xml', 'r') as f:
+            return f.read().replace('$BASEURL', request.headers["Host"])
+    except Exception as e:
+        return await render_template(
+            "error.html",
+            error_number = "500",
+            error_reason = e
+        ), 500
+
 if __name__ == "__main__":
     if len(sys.argv) == 3:
         interface = sys.argv[1]
