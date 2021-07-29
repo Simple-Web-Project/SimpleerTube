@@ -415,7 +415,15 @@ async def video_channels__about(domain, name):
 @app.route("/<string:domain>/videos/watch/<string:id>/<string:lang>.vtt")
 async def subtitles(domain, id, lang):
     try:
-        return peertube.video_captions_download(domain, id, lang)
+        captions = peertube.video_captions(domain, id)
+        print(captions)
+        for entry in captions["data"]:
+            if entry["language"]["id"] == lang: return peertube.video_captions_download(domain, entry["captionPath"].split('/')[-1])
+        return await render_template(
+            "error.html",
+            error_number = "404",
+            error_reason = "This video has no subtitles/captions inthe requested language"
+        ), 404
     except Exception as e:
         return await render_template(
             "error.html",

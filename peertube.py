@@ -26,10 +26,11 @@ def video_captions(domain, id):
     url = "https://" + domain + "/api/v1/videos/" + id + "/captions"
     return json.loads(requests.get(url).text)
 
-def video_captions_download(domain, id, lang):
+def video_captions_download(domain, caption_id):
     # URL is hardcoded to prevent further proxying. URL may change with updates, see captions API
     # eg. https://kolektiva.media/api/v1/videos/9c9de5e8-0a1e-484a-b099-e80766180a6d/captions
-    url = "https://" + domain + "/lazy-static/video-captions/" + id + '-' + lang + ".vtt"
+    # TODO: What if the captionPath doesn't follow this format on an instance? Should we really proxy ANYTHING returned by API?
+    url = "https://" + domain + "/lazy-static/video-captions/" + caption_id
     return requests.get(url).text
 
 def search(domain, term, start=0, count=10):
