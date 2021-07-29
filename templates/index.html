@@ -3,7 +3,7 @@
     <head>
         <title>SimpleerTube - Search</title>
         <link rel="stylesheet" href="/static/style.css">
-	<link rel="search" type="application/opensearchdescription+xml" href="/opensearch.xml" title="SimpleerTube"/>
+        <link rel="search" type="application/opensearchdescription+xml" href="/opensearch.xml" title="SimpleerTube"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     </head>
     <body>
@@ -14,7 +14,37 @@
             <form action="/search" method="POST">
                 <input size="45" style="max-width: 100%" type="text" name="query" id="query" placeholder="SepiaSearch"/>
                 <button type="submit">Search</button>
-            </form>
+            </form>{% if videos|length > 0 %}
+            <hr>
+            <h2>{{ videos|length }} latest videos from local subscriptions</h2>
+            <p>{% for sub in subscriptions %}{% if not loop.first %}, {% endif %}<a href="/{{ sub.host }}/accounts/{{ sub.name }}">{{ sub.displayName }} (@{{ sub.name }}@{{ sub.host }})</a>{% endfor %}</p>
+            <hr>
+            <div id="wrap">
+                {#{% for vid in videos %}
+                    <pre>{{ vid|pprint }}</pre>
+                {% endfor %}#}
+                {% for vid in videos %}
+                <div class="result-wrapper">
+                    <a href="/{{ vid.account.host }}/videos/watch/{{ vid.uuid }}">
+                        <img src="https://{{ vid.account.host }}{{ vid.thumbnailPath }}" height="150"/>
+                    </a>
+
+                    <div class="result-info">
+                        <a href="/{{ vid.account.host }}/videos/watch/{{ vid.uuid }}">{{ vid.name }}</a>
+                        <br>
+                        {{ vid.views }} Views
+                        <br>
+                        <a href="/{{ vid.account.host }}/video-channels/{{ vid.channel.name }}@{{ vid.channel.host }}">
+                            <b>{{ vid.channel.displayName }}</b>
+                        </a>
+                        <br>
+                        <a href="/{{ vid.account.host }}/accounts/{{ vid.account.name }}@{{ vid.account.host }}">
+                            {{ vid.account.name }}@{{ vid.account.host }}
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>{% endif %}
         </center>
     </body>
 </html>

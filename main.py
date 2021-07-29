@@ -1,5 +1,6 @@
 from quart import Quart, request, render_template, redirect
 from datetime import datetime
+from dateutil import parser as dateutil
 from math import ceil
 import peertube
 import html2text
@@ -92,6 +93,9 @@ cached_instance_names = Cache()
 cached_account_infos = Cache()
 cached_video_channel_infos = Cache()
 
+cached_subscriptions_accounts = Cache(criteria = lambda diff: diff.total_seconds() > 60)
+cached_account_videos = Cache(criteria = lambda diff: diff.total_seconds() > 1800)
+
 # cache the instance names so we don't have to send a request to the domain every time someone
 # loads any site 
 def get_instance_name(domain):
@@ -115,8 +119,39 @@ def get_video_channel(info):
 def get_video_channel_info(name):
     return cached_video_channel_infos.get(name, get_video_channel)
 
+# Get latest remote videos from name
+def get_latest_account_videos(name):
+    return cached_account_videos.get(name, latest_account_videos)
 
+# Refresh latest remote videos from name
+def latest_account_videos(name):
+    print("[CACHE] Refreshing acount videos for %s" % name)
+    (name, domain) = name.split('@')
+    return peertube.account_videos(domain, name, 0)
 
+# Get local accounts subscriptions, as specified in accounts.list
+def get_subscriptions_accounts():
+    return cached_subscriptions_accounts.get("accounts", load_subscriptions_accounts)
+
+# Refresh local accounts subscriptions
+def load_subscriptions_accounts(_):
+    print("[CACHE] Refreshing subscriptions accounts from accounts.list")
+    try:
+        with open('accounts.list', 'r') as f:
+            subscriptions = f.read().splitlines()
+    except Exception as e:
+        print("No `accounts.list` file to load for local subscriptions")
+        subscriptions = []
+    return subscriptions
+
+# Get the latest videos from local accounts subscriptions, ordered by most recent and with ; only return `limit` number of videos
+def get_subscriptions_accounts_videos(limit=12):
+    latest  = []
+    for sub in get_subscriptions_accounts():
+        account_latest = get_latest_account_videos(sub)["data"]
+        latest.extend(account_latest)
+    latest.sort(key = lambda vid: dateutil.isoparse(vid["createdAt"]), reverse=True)
+    return latest[0:limit]
 
 app = Quart(__name__)
 
@@ -124,6 +159,8 @@ app = Quart(__name__)
 async def main():
     return await render_template(
         "index.html",
+        videos = get_subscriptions_accounts_videos(),
+        subscriptions = map(lambda sub: get_account_info(sub), get_subscriptions_accounts())
     )
 
 @app.route("/search", methods = ["POST"])
