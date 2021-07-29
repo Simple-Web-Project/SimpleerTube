@@ -131,6 +131,11 @@ async def simpleer_search_redirect():
     query = (await request.form)["query"]
     return redirect("/search/" + query)
 
+@app.route("/search", methods = ["GET"])
+async def simpleer_search_get_redirect():
+    query = request.args.get("query")
+    return redirect("/search/" + query)
+
 @app.route("/search/<string:query>", defaults = {"page": 1})
 @app.route("/search/<string:query>/<int:page>")
 async def simpleer_search(query, page):
