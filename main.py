@@ -176,7 +176,7 @@ def load_subscriptions(kind):
         print("No `channels.list` file to load for local subscriptions")
         subscriptions = []
     # Remove comment entries and empty lines
-    return filter(lambda entry: entry != '', subscriptions)
+    return list(filter(lambda entry: entry != '', subscriptions))
 
 # Builds a unified id@server from one of those syntaxes, additionally stripping extra whitespace and ignoring `#` as comments:
 #   - id@server
