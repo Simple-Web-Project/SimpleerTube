@@ -17,12 +17,9 @@
             </form>{% if videos|length > 0 %}
             <hr>
             <h2>{{ videos|length }} latest videos from local subscriptions</h2>
-            <p>{% for sub in subscriptions %}{% if not loop.first %}, {% endif %}<a href="/{{ sub.host }}/accounts/{{ sub.name }}">{{ sub.displayName }} (@{{ sub.name }}@{{ sub.host }})</a>{% endfor %}</p>
+            <p>{% for sub in subscriptions %}{% if not loop.first %}, {% endif %}<a href="/{{ sub.host }}{% if sub.ownerAccount %}/video-channels{% else %}/accounts{% endif %}/{{ sub.name }}">{{ sub.displayName }} (@{{ sub.name }}@{{ sub.host }})</a>{% endfor %}</p>
             <hr>
             <div id="wrap">
-                {#{% for vid in videos %}
-                    <pre>{{ vid|pprint }}</pre>
-                {% endfor %}#}
                 {% for vid in videos %}
                 <div class="result-wrapper">
                     <a href="/{{ vid.account.host }}/videos/watch/{{ vid.uuid }}">

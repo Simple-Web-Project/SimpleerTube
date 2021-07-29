@@ -94,8 +94,9 @@ cached_instance_names = Cache()
 cached_account_infos = Cache()
 cached_video_channel_infos = Cache()
 
-cached_subscriptions_accounts = Cache(criteria = lambda diff: diff.total_seconds() > 60)
+cached_subscriptions = Cache(criteria = lambda diff: diff.total_seconds() > 60)
 cached_account_videos = Cache(criteria = lambda diff: diff.total_seconds() > 1800)
+cached_channel_videos = Cache(criteria = lambda diff: diff.total_seconds() > 1800)
 
 # cache the instance names so we don't have to send a request to the domain every time someone
 # loads any site 
@@ -120,19 +121,29 @@ def get_video_channel(info):
 def get_video_channel_info(name):
     return cached_video_channel_infos.get(name, get_video_channel)
 
-# Get latest remote videos from name
+# Get latest remote videos from channel name
+def get_latest_channel_videos(name):
+    return cached_channel_videos.get(name, latest_channel_videos)
+
+# Refresh latest remote videos from channel name
+def latest_channel_videos(name):
+    print("[CACHE] Refreshing channel videos for %s" % name)
+    (name, domain) = name.split('@')
+    return peertube.video_channel_videos(domain, name, 0)
+
+# Get latest remote videos from account name
 def get_latest_account_videos(name):
     return cached_account_videos.get(name, latest_account_videos)
 
-# Refresh latest remote videos from name
+# Refresh latest remote videos from account name
 def latest_account_videos(name):
-    print("[CACHE] Refreshing acount videos for %s" % name)
+    print("[CACHE] Refreshing account videos for %s" % name)
     (name, domain) = name.split('@')
     return peertube.account_videos(domain, name, 0)
 
 # Get local accounts subscriptions, as specified in accounts.list
 def get_subscriptions_accounts():
-    return cached_subscriptions_accounts.get("accounts", load_subscriptions_accounts)
+    return cached_subscriptions.get("accounts", load_subscriptions_accounts)
 
 # Refresh local accounts subscriptions
 def load_subscriptions_accounts(_):
@@ -145,7 +156,7 @@ def load_subscriptions_accounts(_):
         subscriptions = []
     return subscriptions
 
-# Get the latest videos from local accounts subscriptions, ordered by most recent and with ; only return `limit` number of videos
+# Get the latest videos from local accounts subscriptions, ordered by most recent; only return `limit` number of videos
 def get_subscriptions_accounts_videos(limit=12):
     latest  = []
     for sub in get_subscriptions_accounts():
@@ -154,14 +165,64 @@ def get_subscriptions_accounts_videos(limit=12):
     latest.sort(key = lambda vid: dateutil.isoparse(vid["createdAt"]), reverse=True)
     return latest[0:limit]
 
+# Get local channels subscriptions, as specified in channel.list
+def get_subscriptions_channels():
+    return cached_subscriptions.get("channels", load_subscriptions_channels)
+
+# Refresh local channels subscriptions
+def load_subscriptions_channels(_):
+    print("[CACHE] Refreshing subscriptions channels from channels.list")
+    try:
+        with open('channels.list', 'r') as f:
+            subscriptions = f.read().splitlines()
+    except Exception as e:
+        print("No `channels.list` file to load for local subscriptions")
+        subscriptions = []
+    return subscriptions
+
+# Get the latest videos from local channels subscriptions, ordered by most recent; only return `limit` number of videos
+def get_subscriptions_channels_videos(limit=12):
+    latest  = []
+    for sub in get_subscriptions_channels():
+        channel_latest = get_latest_channel_videos(sub)["data"]
+        latest.extend(channel_latest)
+    latest.sort(key = lambda vid: dateutil.isoparse(vid["createdAt"]), reverse=True)
+    return latest[0:limit]
+
+# Get the latest videos from local channels and accounts subscriptions combined, ordered by most recent; only return `limit` number of videos; NOTE: duplicates are not handled, why would you add both an account and the corresponding channel?
+def get_subscriptions_videos(limit=12):
+    latest = get_subscriptions_channels_videos(limit=limit)
+    latest.extend(get_subscriptions_accounts_videos(limit=limit))
+    # TODO: maybe refactor so we don't have to reorder twice? Or maybe the get_ functions can take a ordered=True argument? In this case here, it would be false, because we sort after
+    latest.sort(key = lambda vid: dateutil.isoparse(vid["createdAt"]), reverse=True)
+    return latest[0:limit]
+
+# Get the info about local accounts subscriptions
+def get_subscriptions_accounts_info():
+    return map(lambda sub: get_account_info(sub), get_subscriptions_accounts())
+
+# Get the info about local channels subscriptions
+def get_subscriptions_channels_info():
+    return map(lambda sub: get_video_channel_info(sub), get_subscriptions_channels())
+
+# Get the info about local subscriptions for accounts and channels, as a tuple of lists
+def get_subscriptions_info():
+    list = []
+    list.extend(get_subscriptions_accounts_info())
+    list.extend(get_subscriptions_channels_info())
+    return list
+
 app = Quart(__name__)
 
 @app.route("/")
 async def main():
+    videos = get_subscriptions_videos(limit=12)
+    # Inside subscriptions variable, you may find either an account info structure, or a channel info structure. Channels may be recognized due to `ownerAccount` property.
+    subscriptions = get_subscriptions_info()
     return await render_template(
         "index.html",
-        videos = get_subscriptions_accounts_videos(),
-        subscriptions = map(lambda sub: get_account_info(sub), get_subscriptions_accounts())
+        videos=videos,
+        subscriptions=subscriptions,
     )
 
 @app.route("/search", methods = ["POST"])
