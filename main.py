@@ -147,14 +147,7 @@ def get_subscriptions_accounts():
 
 # Refresh local accounts subscriptions
 def load_subscriptions_accounts(_):
-    print("[CACHE] Refreshing subscriptions accounts from accounts.list")
-    try:
-        with open('accounts.list', 'r') as f:
-            subscriptions = f.read().splitlines()
-    except Exception as e:
-        print("No `accounts.list` file to load for local subscriptions")
-        subscriptions = []
-    return subscriptions
+    return load_subscriptions("accounts")
 
 # Get the latest videos from local accounts subscriptions, ordered by most recent; only return `limit` number of videos
 def get_subscriptions_accounts_videos(limit=12):
@@ -171,14 +164,51 @@ def get_subscriptions_channels():
 
 # Refresh local channels subscriptions
 def load_subscriptions_channels(_):
-    print("[CACHE] Refreshing subscriptions channels from channels.list")
+    return load_subscriptions("channels")
+
+# Load subscriptions from a file called `kind`.list (60s cache)
+def load_subscriptions(kind):
+    print("[CACHE] Refreshing subscriptions %s from %s.list" % (kind, kind))
     try:
-        with open('channels.list', 'r') as f:
-            subscriptions = f.read().splitlines()
+        with open(kind + '.list', 'r') as f:
+            subscriptions = map(find_subscription, f.read().splitlines())
     except Exception as e:
         print("No `channels.list` file to load for local subscriptions")
         subscriptions = []
-    return subscriptions
+    # Remove comment entries and empty lines
+    return filter(lambda entry: entry != '', subscriptions)
+
+# Builds a unified id@server from one of those syntaxes, additionally stripping extra whitespace and ignoring `#` as comments:
+#   - id@server
+#   - @id@server
+#   - http(s)://server/c/id
+#   - http(s)://server/a/id
+def find_subscription(request):
+    identifier = request
+    identifier = identifier.split('#')[0].strip()
+    # Comment line is returned as empty string
+    if identifier == '': return ''
+    if identifier.startswith('@'):
+        # Strip @ from identifier
+        return identifier[1:]
+    if identifier.startswith('http'):
+        identifier = identifier[4:]
+        # HTTPS?
+        if identifier.startswith('s'): identifier = identifier[1:]
+        # Remove ://
+        identifier = identifier[3:]
+        parts = identifier.split('/')
+        domain = parts[0]
+        if parts[1] == 'a' or parts[1] == 'c':
+            # Account or channel found, take the next part
+            return parts[2] + '@' + domain
+    else:
+        # Just check there's an @ in there and it should be fine
+        if '@' in identifier:
+            return identifier
+    # No match was found, we don't understand this URL
+    print("[WARN] Identifier not understood from local subscriptions:\n%s" % request)
+    return ''
 
 # Get the latest videos from local channels subscriptions, ordered by most recent; only return `limit` number of videos
 def get_subscriptions_channels_videos(limit=12):
