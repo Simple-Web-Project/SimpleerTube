@@ -416,7 +416,6 @@ async def video_channels__about(domain, name):
 async def subtitles(domain, id, lang):
     try:
         captions = peertube.video_captions(domain, id)
-        print(captions)
         for entry in captions["data"]:
             if entry["language"]["id"] == lang: return peertube.video_captions_download(domain, entry["captionPath"].split('/')[-1])
         return await render_template(
