@@ -11,7 +11,12 @@
 
     <body>
         <center>
+
         <h2>{{ instance_name }}</h2>
+        <a href="/">Home</a>
+        <b> | </b>
+        <a href="/{{ domain }}">Instance Home</a>
+
         <form action="/{{ domain }}/search" method="POST">
             <input size="45" style="max-width: 100%" type="text" name="query" id="query" placeholder="Search" value="{{ search_term }}"/>
             <button type="submit">Search</button>
