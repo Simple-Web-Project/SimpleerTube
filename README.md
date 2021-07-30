@@ -34,6 +34,11 @@ $ python3 main.py ::1 7171 # Also works with IPv6 addresses
 
 It is strongly disrecommended to run the production using this command. Instead, please refer to the [Quart deployment docs](https://pgjones.gitlab.io/quart/tutorials/deployment.html).
 
+## TODO-Tracker
+
+We have our TODO-Tracker hosted on todo.sr.ht: [SimpleerTube](https://todo.sr.ht/~metalune/SimpleerTube)
+
 ## License
 
 This software is distributed under the AGPLv3 license. You can find a copy in the [LICENSE](LICENSE) file.
+
