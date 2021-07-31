@@ -1,9 +1,6 @@
 # SimpleerTube
 
-Active Known Instances:
-- https://simpleertube.metalune.xyz
-
-If you want to add your instance to this list, message us on IRC (#simple-web on irc.libera.chat).
+To see active instances, refer to [Our Project Page](https://simple-web.metalune.xyz/projects/simpleertube.html)
 
 For the rest of the documentation, https://simpleertube.metalune.xyz will be used as an example instance.
 
