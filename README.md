@@ -2,10 +2,10 @@
 
 To see active instances, refer to [Our Project Page](https://simple-web.metalune.xyz/projects/simpleertube.html)
 
-For the rest of the documentation, https://simpleertube.metalune.xyz will be used as an example instance.
+For the rest of the documentation, https://tube.metalune.xyz will be used as an example instance.
 
-If you want to visit any page from your PeerTube instance of choice in SimpleerTube, just prepend https://simpleertube.metalune.xyz to the URL.
-So, `https://videos.lukesmith.xyz/accounts/luke` becomes `https://simpleertube.metalune.xyz/videos.lukesmith.xyz/accounts/luke`.
+If you want to visit any page from your PeerTube instance of choice in SimpleerTube, just prepend https://tube.metalune.xyz to the URL.
+So, `https://videos.lukesmith.xyz/accounts/luke` becomes `https://tube.metalune.xyz/videos.lukesmith.xyz/accounts/luke`.
 
 If you visit the main page, you can search globally (it uses [Sepia Search](https://sepiasearch.org) in the backend).
 
