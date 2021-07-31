@@ -153,8 +153,13 @@ def load_subscriptions_accounts(_):
 def get_subscriptions_accounts_videos(limit=12):
     latest  = []
     for sub in get_subscriptions_accounts():
-        account_latest = get_latest_account_videos(sub)["data"]
-        latest.extend(account_latest)
+        result = get_latest_account_videos(sub)
+        if result["status"] == 200:
+            account_latest = get_latest_account_videos(sub)["data"]
+            latest.extend(account_latest)
+        else:
+            print("[WARN] Unable to get content from account " + sub)
+
     latest.sort(key = lambda vid: dateutil.isoparse(vid["createdAt"]), reverse=True)
     return latest[0:limit]
 
@@ -221,7 +226,7 @@ def get_subscriptions_channels_videos(limit=12):
             channel_latest = get_latest_channel_videos(sub)["data"]
             latest.extend(channel_latest)
         else:
-            print("[WARN] Unable to get content from " + sub)
+            print("[WARN] Unable to get content from channel " + sub)
     latest.sort(key = lambda vid: dateutil.isoparse(vid["createdAt"]), reverse=True)
     return latest[0:limit]
 
