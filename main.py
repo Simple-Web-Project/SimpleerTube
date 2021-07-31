@@ -266,6 +266,12 @@ async def main():
         subscriptions=subscriptions,
     )
 
+
+@app.route("/instance", methods=["POST"])
+async def jump_to_instance():
+    domain = (await request.form)["domain"]
+    return redirect("/" + domain)
+
 @app.route("/search", methods = ["POST"])
 async def simpleer_search_redirect():
     query = (await request.form)["query"]
@@ -369,6 +375,7 @@ async def instance_videos_recently_added(domain, page):
         pagination_url="/" + domain + "/videos/recently-added/",
         pages_total=ceil(vids["total"] / 10),
     )
+
 
 
 

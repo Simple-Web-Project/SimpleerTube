@@ -14,7 +14,19 @@
             <form action="/search" method="POST">
                 <input size="45" style="max-width: 100%" type="text" name="query" id="query" placeholder="SepiaSearch"/>
                 <button type="submit">Search</button>
-            </form>{% if videos|length > 0 %}
+            </form>
+
+            <br>
+
+            <form action="/instance" method="POST">
+                <label for="domain">Go to a specific instance:</label>
+                <br>
+                <input size="45" style="max-width: 100%" type="text" name="domain" id="domain" placeholder="Domain name"/>
+                <button type="submit">Go!</button>
+            </form>
+
+
+            {% if videos|length > 0 %}
             <hr>
             <h2>{{ videos|length }} latest videos from local subscriptions</h2>
             <p>{% for sub in subscriptions %}{% if not loop.first %}, {% endif %}<a href="/{{ sub.host }}{% if sub.ownerAccount %}/video-channels{% else %}/accounts{% endif %}/{{ sub.name }}">{{ sub.displayName }} (@{{ sub.name }}@{{ sub.host }})</a>{% endfor %}</p>
