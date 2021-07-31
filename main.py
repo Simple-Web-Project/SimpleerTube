@@ -191,6 +191,7 @@ def find_subscription(request):
     if identifier.startswith('@'):
         # Strip @ from identifier
         return identifier[1:]
+
     if identifier.startswith('http'):
         identifier = identifier[4:]
         # HTTPS?
@@ -206,6 +207,7 @@ def find_subscription(request):
         # Just check there's an @ in there and it should be fine
         if '@' in identifier:
             return identifier
+
     # No match was found, we don't understand this URL
     print("[WARN] Identifier not understood from local subscriptions:\n%s" % request)
     return ''
@@ -214,8 +216,12 @@ def find_subscription(request):
 def get_subscriptions_channels_videos(limit=12):
     latest  = []
     for sub in get_subscriptions_channels():
-        channel_latest = get_latest_channel_videos(sub)["data"]
-        latest.extend(channel_latest)
+        result = get_latest_channel_videos(sub)
+        if result["status"] == 200:
+            channel_latest = get_latest_channel_videos(sub)["data"]
+            latest.extend(channel_latest)
+        else:
+            print("[WARN] Unable to get content from " + sub)
     latest.sort(key = lambda vid: dateutil.isoparse(vid["createdAt"]), reverse=True)
     return latest[0:limit]
 
