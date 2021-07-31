@@ -154,7 +154,7 @@ def get_subscriptions_accounts_videos(limit=12):
     latest  = []
     for sub in get_subscriptions_accounts():
         result = get_latest_account_videos(sub)
-        if result["status"] == 200:
+        if "error" not in result: 
             account_latest = get_latest_account_videos(sub)["data"]
             latest.extend(account_latest)
         else:
