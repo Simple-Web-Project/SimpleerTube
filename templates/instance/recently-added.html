@@ -8,7 +8,9 @@
 <div id="wrap">
     {% for video in videos.data %}
         <div class="result-wrapper">
-            <img src="https://{{ domain }}{{ video.thumbnailPath }}" height="150"/>
+            <a href="https://{{ domain }}/videos/watch/{{ video.uuid }}">
+                <img src="https://{{ domain }}{{ video.thumbnailPath }}" height="150"/>
+            </a>
     
             <div class="result-info">
                 <a href="/{{ domain }}/videos/watch/{{ video.uuid }}">{{ video.name }}</a>
