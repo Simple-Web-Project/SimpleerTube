@@ -55,6 +55,49 @@ a {
     text-decoration: none;
 }
 
+@media screen and (prefers-color-scheme: light) {
+    /*- blue0-light scheme -*/
+    /*- submitted by Patrick G. Palmer -*/
+    body {
+        background-color: #bce2e5;
+        color: #555;
+    }
+
+    a:visited {
+        color: #9759c6;
+    }
+
+    a:hover {
+        color: #9759c6;
+    }
+
+    a {
+        color: #6c9bd2;
+    }
+
+    button,
+    input {
+        background-color: #131618;
+        border-color: #495057;
+        color: #f8f9fa;
+    }
+
+    .tag {
+        bacgkround-color: #495057;
+        color: #f8f9fa;
+    }
+
+    center {
+        background-color: #fff;
+        box-shadow: 0px 0px 20px rgba(0,0,0,0.1);
+    }
+
+    hr {
+        border: 1px solid #bce2e5;
+        width: 80%;
+    }
+}
+
 @media screen and (prefers-color-scheme: dark) {
     body {
         background-color: #212529;
