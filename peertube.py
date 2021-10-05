@@ -1,17 +1,22 @@
 from bs4 import BeautifulSoup
 import requests
+import functools
 import json
+
+s = requests.Session()
+s.request = functools.partial(s.request, timeout=5)
+
 
 # --- Sepiasearch ---
 def sepia_search(query, start=0, count=10):
     url = "https://search.joinpeertube.org/api/v1/search/videos?search=" + query + "&start=" + str(start) + "&count=" + str(count)
-    return json.loads(requests.get(url).text)
+    return json.loads(s.get(url).text)
 
 # --- ----
 
 
 def get_instance_name(domain):
-    soup = BeautifulSoup(requests.get("https://" + domain).text, "lxml")
+    soup = BeautifulSoup(s.get("https://" + domain).text, "lxml")
     title = soup.find('title')
     if title:
         return title.text
@@ -20,70 +25,70 @@ def get_instance_name(domain):
 
 def video(domain, id):
     url = "https://" + domain + "/api/v1/videos/" + id
-    return json.loads(requests.get(url).text)
+    return json.loads(s.get(url).text)
 
 def video_captions(domain, id):
     url = "https://" + domain + "/api/v1/videos/" + id + "/captions"
-    return json.loads(requests.get(url).text)
+    return json.loads(s.get(url).text)
 
 def video_captions_download(domain, caption_id):
     # URL is hardcoded to prevent further proxying. URL may change with updates, see captions API
     # eg. https://kolektiva.media/api/v1/videos/9c9de5e8-0a1e-484a-b099-e80766180a6d/captions
     # TODO: What if the captionPath doesn't follow this format on an instance? Should we really proxy ANYTHING returned by API?
     url = "https://" + domain + "/lazy-static/video-captions/" + caption_id
-    return requests.get(url).text
+    return s.get(url).text
 
 def search(domain, term, start=0, count=10):
     url = "https://" + domain + "/api/v1/search/videos?start=" + str(start) + "&count=" + str(count) + "&search=" + term + "&sort=-match&searchTarget=local"
-    return json.loads(requests.get(url).text)
+    return json.loads(s.get(url).text)
 
 def get_comments(domain, id):
     url = "https://" + domain + "/api/v1/videos/" + id + "/comment-threads"
-    return json.loads(requests.get(url).text)
+    return json.loads(s.get(url).text)
 
 def get_videos_trending(domain, start=0, count=10):
     url = "https://" + domain + "/api/v1/videos?sort=-trending&start=" + str(start) + "&count=" + str(count)
-    return json.loads(requests.get(url).text)
+    return json.loads(s.get(url).text)
 
 def get_videos_most_liked(domain, start=0, count=10):
     url = "https://" + domain + "/api/v1/videos?sort=-likes&start=" + str(start) + "&count=" + str(count)
-    return json.loads(requests.get(url).text)
+    return json.loads(s.get(url).text)
 
 def get_videos_recently_added(domain, start=0, count=10):
     url = "https://" + domain + "/api/v1/videos?sort=-publishedAt&start=" + str(start) + "&count=" + str(count)
-    return json.loads(requests.get(url).text)
+    return json.loads(s.get(url).text)
 
 def get_videos_local(domain, start=0, count=10):
     url = "https://" + domain + "/api/v1/videos?sort=-publishedAt&filter=local&start=" + str(start) + "&count=" + str(count)
-    return json.loads(requests.get(url).text)
+    return json.loads(s.get(url).text)
 
 # --- Accounts ---
 
 def account_video_channels(domain, name, start=0, count=10):
     url = "https://" + domain + "/api/v1/accounts/" + name + "/video-channels?start=" + str(start) + "&count=" + str(count)
-    return json.loads(requests.get(url).text)
+    return json.loads(s.get(url).text)
 
 def account_videos(domain, name, start=0, count=10):
     url = "https://" + domain + "/api/v1/accounts/" + name + "/videos?start=" + str(start) + "&count=" + str(count)
-    return json.loads(requests.get(url).text)
+    return json.loads(s.get(url).text)
 
 def account(domain, name):
     url = "https://" + domain + "/api/v1/accounts/" + name
-    return json.loads(requests.get(url).text)
+    return json.loads(s.get(url).text)
 
 # --- Video Channels ---
 
 def video_channel_videos(domain, name, start=0, count=10):
     url = "https://" + domain + "/api/v1/video-channels/" + name + "/videos?start=" + str(start) + "&count=" + str(count)
-    return json.loads(requests.get(url).text)
+    return json.loads(s.get(url).text)
 
 def video_channel_video_playlists(domain, name, start=0, count=10):
     url = "https://" + domain + "/api/v1/video-channels/" + name + "/video-playlists?start=" + str(start) + "&count=" + str(count)
-    return json.loads(requests.get(url).text)
+    return json.loads(s.get(url).text)
 
 def video_channel(domain, name):
     url = "https://" + domain + "/api/v1/video-channels/" + name
-    return json.loads(requests.get(url).text)
+    return json.loads(s.get(url).text)
 
 if __name__ == "__main__":
     #name = get_instance_name("videos.lukesmith.xyz")
