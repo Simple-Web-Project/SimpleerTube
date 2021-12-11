@@ -14,7 +14,7 @@ If you visit the main page, you can search globally (it uses [Sepia Search](http
 You need to setup a few dependencies first, usually using pip (`sudo apt install python3-pip` on Debian):
 
 ```
-$ sudo pip3 install quart bs4 html2text lxml
+$ sudo pip3 install quart bs4 html2text lxml python-dateutil
 ```
 
 **Note:** If there are other dependencies that are not packaged with your system, please report them to us so they can be added to this README.
