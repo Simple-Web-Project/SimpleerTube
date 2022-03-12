@@ -1,3 +1,4 @@
 python-dateutil
 html2text
 quart
+lxml
