@@ -404,6 +404,7 @@ async def search(domain, term, page):
         pages_total=(results["total"] / 10)
     )
 
+@app.route("/<string:domain>/w/<string:id>/")
 @app.route("/<string:domain>/videos/watch/<string:id>/")
 async def video(domain, id):
     data = peertube.video(domain, id)
